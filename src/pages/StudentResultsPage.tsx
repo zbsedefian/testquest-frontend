@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../auth";
 
 type Result = {
   id: number;
@@ -11,13 +12,14 @@ type Result = {
 };
 
 export default function StudentResultsPage() {
+  const { user } = useAuth();
   const { studentId } = useParams();
   const [results, setResults] = useState<Result[]>([]);
 
   useEffect(() => {
     axios
       .get(`/api/teacher/student/${studentId}/results`, {
-        headers: { "x-user-id": "2", "x-user-role": "teacher" }, // todo -- update auth
+        headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       })
       .then((res) => setResults(res.data))
       .catch(console.error);

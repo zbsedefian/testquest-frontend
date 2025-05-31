@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
+import axios from "axios";
 
 const Login = () => {
   const [username, setUsername] = useState("");
-  const [role, setRole] = useState<"student" | "teacher" | "admin">("student");
+  const [password, setPassword] = useState("");
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
@@ -15,11 +16,18 @@ const Login = () => {
     }
   }, [user, navigate]);
 
-  function handleLogin(e: React.FormEvent) {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setUser({ username, role, id: 1 });
-    navigate(`/${role}`);
-  }
+    try {
+      const res = await axios.post("api/auth/login", { username, password });
+      const user = res.data;
+      setUser(user);
+      navigate(`/${user.role}`);
+    } catch (err) {
+      alert("Login failed");
+      console.error(err);
+    }
+  };
 
   // If logged in, this component redirects anyway, so show form by default
   return (
@@ -35,17 +43,13 @@ const Login = () => {
       </label>
       <br />
       <label>
-        Role:{" "}
-        <select
-          value={role}
-          onChange={(e) =>
-            setRole(e.target.value as "student" | "teacher" | "admin")
-          }
-        >
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
-          <option value="admin">Admin</option>
-        </select>
+        Password:{" "}
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
       </label>
       <br />
       <button type="submit">Login</button>

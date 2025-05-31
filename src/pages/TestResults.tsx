@@ -31,10 +31,7 @@ export default function TestResults() {
     if (!user) return;
     axios
       .get("/api/student/test-results", {
-        headers: {
-          "x-user-id": 3, // user.id.toString(),
-          "x-user-role": user.role,
-        },
+        headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       })
       .then((res) => {
         setResults(res.data);
@@ -52,16 +49,17 @@ export default function TestResults() {
   if (error) return <p>{error}</p>;
   if (results.length === 0) return <p>No test results found.</p>;
   const grouped = groupByTest(results);
-  
+
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Test Results</h2>
       {Object.entries(grouped).map(([testId, group]) => (
         <div key={testId} className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">
-            {group.test_name}
-          </h3>
-          <h5>You have {group.results.length} result{group.results.length !== 1 ? 's' : '' } for this test.</h5>
+          <h3 className="text-lg font-semibold mb-2">{group.test_name}</h3>
+          <h5>
+            You have {group.results.length} result
+            {group.results.length !== 1 ? "s" : ""} for this test.
+          </h5>
           <ul className="ml-4 list-disc">
             {group.results.map((r) => (
               <li key={r.id}>

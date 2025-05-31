@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import { useAuth } from "../auth";
+import { useAuth } from "../auth";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -9,12 +9,12 @@ type Student = {
 };
 
 export default function TeacherStudentList() {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [students, setStudents] = useState<Student[]>([]);
   useEffect(() => {
     axios
       .get("/api/teacher/students", {
-        headers: { "x-user-id": "2", "x-user-role": "teacher" }, // todo -- update auth
+        headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       })
       .then((res) => setStudents(res.data))
       .catch(console.error);

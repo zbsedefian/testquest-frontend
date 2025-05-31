@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "katex/dist/katex.min.css";
 import { InlineMath } from "react-katex";
+import { useAuth } from "../auth";
 
 
 type Question = {
@@ -19,6 +20,7 @@ type Answer = {
 export default function TestPage() {
   const { testId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -28,7 +30,7 @@ export default function TestPage() {
   useEffect(() => {
     axios
       .get(`/api/student/test/${testId}`, {
-        headers: { "x-user-id": "3", "x-user-role": "student" }, // replace with dynamic headers
+        headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       })
       .then((res) => {
         setQuestions(res.data);
@@ -56,7 +58,7 @@ export default function TestPage() {
             answers: updatedAnswers,
           },
           {
-            headers: { "x-user-id": "3", "x-user-role": "student" },
+            headers: { "x-user-id": user?.id, "x-user-role": user?.role },
           }
         )
         .then((res) => {
