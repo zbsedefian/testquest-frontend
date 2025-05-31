@@ -5,10 +5,10 @@ const TeacherDashboard = () => {
     <div>
       <h2>Teacher Dashboard</h2>
       <p>Here you can view your assigned students, create tests, and review results.</p>
-      {/* Example Links */}
       <ul>
-        <li><Link to="/teacher/students">View Students</Link></li>
-        <li><Link to="/teacher/tests">Manage Tests</Link></li>
+        <li><Link to="students">View Students</Link></li>
+        <li><Link to="tests">Manage Tests</Link></li>
+        <li><Link to="tests/create">Create Test</Link></li>
       </ul>
     </div>
   );

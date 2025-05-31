@@ -9,11 +9,15 @@ import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
 import TestPage from "./pages/TestPage";
 import TeacherDashboard from "./pages/TeacherDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
 import TeacherStudentList from "./pages/TeacherStudentList";
 import StudentResultsPage from "./pages/StudentResultsPage";
-import TestResults from "./pages/TestResults";
+import TestsList from "./pages/TestsList";
+import { CreateTest } from "./pages/CreateTest";
+import AdminDashboard from "./pages/AdminDashboard";
 import AdminUserManagement from "./pages/AdminUserManagement";
+import TestResults from "./pages/TestResults";
+import { AddQuestion } from "./pages/AddQuestion";
+import { AssignTest } from "./pages/AssignTest";
 
 function App() {
   return (
@@ -45,6 +49,10 @@ function App() {
                   path="student/:studentId/results"
                   element={<StudentResultsPage />}
                 />
+                <Route path="tests" element={<TestsList />} />
+                <Route path="tests/create" element={<CreateTest />} />
+                <Route path="tests/:testId/add-question" element={<AddQuestion />} />
+                <Route path="tests/:testId/assign" element={<AssignTest />} />
               </Routes>
             </RequireAuth>
           }
