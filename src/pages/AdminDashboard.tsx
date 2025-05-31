@@ -7,8 +7,7 @@ const AdminDashboard = () => {
       <p>Manage all users, system settings, and global configurations.</p>
       {/* Example Links */}
       <ul>
-        <li><Link to="/admin/teachers">Manage Teachers</Link></li>
-        <li><Link to="/admin/students">Manage Students</Link></li>
+        <li><Link to="/admin/users">Manage Users</Link></li>
       </ul>
     </div>
   );

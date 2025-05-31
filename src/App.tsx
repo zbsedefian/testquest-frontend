@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import TeacherStudentList from "./pages/TeacherStudentList";
 import StudentResultsPage from "./pages/StudentResultsPage";
 import TestResults from "./pages/TestResults";
+import AdminUserManagement from "./pages/AdminUserManagement";
 
 function App() {
   return (
@@ -53,7 +54,10 @@ function App() {
           path="/admin/*"
           element={
             <RequireAuth allowedRoles={["admin"]}>
-              <AdminDashboard />
+              <Routes>
+                <Route path="" element={<AdminDashboard />} />
+                <Route path="users" element={<AdminUserManagement />} />
+              </Routes>
             </RequireAuth>
           }
         />
