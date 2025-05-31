@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "katex/dist/katex.min.css";
+import { InlineMath } from "react-katex";
+
 
 type Question = {
   id: number;
@@ -81,15 +84,24 @@ export default function TestPage() {
       <h2 className="text-xl font-bold mb-2">
         Question {currentIndex + 1} of {questions.length}
       </h2>
-      <p className="mb-4">{q.question_text}</p>
+
+      <div className="mb-4">
+        <InlineMath math={q.question_text} />
+      </div>
+
       <div className="grid gap-2">
-        {Object.entries(typeof q.choices === "string" ? JSON.parse(q.choices) : q.choices).map(([key, value]) => (
+        {(
+          Object.entries(
+            typeof q.choices === "string" ? JSON.parse(q.choices) : q.choices
+          ) as [string, string][]
+        ).map(([key, value]) => (
           <button
             key={key}
             className="border p-2 rounded hover:bg-gray-200"
             onClick={() => handleAnswer(key)}
           >
-            {key}: {<>{value}</>}
+            <span className="font-bold">{key}:</span>{" "}
+            <InlineMath math={value} />
           </button>
         ))}
       </div>

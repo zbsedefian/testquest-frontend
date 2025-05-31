@@ -1,10 +1,17 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { RequireAuth } from "./auth";
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
 import TestPage from "./pages/TestPage";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import TeacherStudentList from "./pages/TeacherStudentList";
+import StudentResultsPage from "./pages/StudentResultsPage";
 import TestResults from "./pages/TestResults";
 
 function App() {
@@ -30,7 +37,14 @@ function App() {
           path="/teacher/*"
           element={
             <RequireAuth allowedRoles={["teacher", "admin"]}>
-              <TeacherDashboard />
+              <Routes>
+                <Route path="" element={<TeacherDashboard />} />
+                <Route path="students" element={<TeacherStudentList />} />
+                <Route
+                  path="student/:studentId/results"
+                  element={<StudentResultsPage />}
+                />
+              </Routes>
             </RequireAuth>
           }
         />

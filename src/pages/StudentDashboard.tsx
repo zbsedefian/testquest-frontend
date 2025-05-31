@@ -8,6 +8,7 @@ const StudentDashboard = () => {
       <ul>
         <li><Link to="/student/test/1">Start Test 1</Link></li>
         <li><Link to="/student/test/2">Start Test 2</Link></li>
+        <li><Link to="/student/test/3">Start Test 3</Link></li>
         <li><Link to="/student/results">View My Test Results</Link></li>
       </ul>
     </div>
