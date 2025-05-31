@@ -68,32 +68,31 @@ export default function TestPage() {
   };
 
   if (loading) return <p>Loading test...</p>;
-if (!questions.length) return <p>No questions found.</p>;
+  if (!questions.length) return <p>No questions found.</p>;
 
-// Defensive: check if currentIndex is valid and choices exist
-const q = questions[currentIndex];
+  // Defensive: check if currentIndex is valid and choices exist
+  const q = questions[currentIndex];
 
-if (!q) return <p>Question not found.</p>;
-if (!q.choices) return <p>Question choices missing.</p>;
+  if (!q) return <p>Question not found.</p>;
+  if (!q.choices) return <p>Question choices missing.</p>;
 
-return (
-  <div className="p-4 max-w-xl mx-auto">
-    <h2 className="text-xl font-bold mb-2">
-      Question {currentIndex + 1} of {questions.length}
-    </h2>
-    <p className="mb-4">{q.question_text}</p>
-    <div className="grid gap-2">
-      {Object.entries(typeof q.choices === "string" ? JSON.parse(q.choices) : q.choices).map(([key, value]) => (
-        <button
-          key={key}
-          className="border p-2 rounded hover:bg-gray-200"
-          onClick={() => handleAnswer(key)}
-        >
-          {key}: {value}
-        </button>
-      ))}
+  return (
+    <div className="p-4 max-w-xl mx-auto">
+      <h2 className="text-xl font-bold mb-2">
+        Question {currentIndex + 1} of {questions.length}
+      </h2>
+      <p className="mb-4">{q.question_text}</p>
+      <div className="grid gap-2">
+        {Object.entries(typeof q.choices === "string" ? JSON.parse(q.choices) : q.choices).map(([key, value]) => (
+          <button
+            key={key}
+            className="border p-2 rounded hover:bg-gray-200"
+            onClick={() => handleAnswer(key)}
+          >
+            {key}: {<>{value}</>}
+          </button>
+        ))}
+      </div>
     </div>
-  </div>
-);
-
+  );
 }

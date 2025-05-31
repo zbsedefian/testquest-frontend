@@ -5,6 +5,7 @@ import StudentDashboard from "./pages/StudentDashboard";
 import TestPage from "./pages/TestPage";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import TestResults from "./pages/TestResults";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <Routes>
                 <Route path="" element={<StudentDashboard />} />
                 <Route path="test/:testId" element={<TestPage />} />
+                <Route path="results" element={<TestResults />} />
               </Routes>
             </RequireAuth>
           }
