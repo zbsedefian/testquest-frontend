@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "../../auth"; // Your auth hook
+import { useAuth } from "../../auth";
 
 type TestResult = {
   id: number;
@@ -44,34 +44,55 @@ export default function TestResults() {
       });
   }, [user]);
 
-  if (!user) return <p>Please log in.</p>;
-  if (loading) return <p>Loading results...</p>;
-  if (error) return <p>{error}</p>;
-  if (results.length === 0) return <p>No test results found.</p>;
+  if (!user) return <p className="text-center text-gray-500">Please log in.</p>;
+  if (loading)
+    return <p className="text-center text-gray-500">Loading results...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (results.length === 0)
+    return <p className="text-center text-gray-500">No test results found.</p>;
+
   const grouped = groupByTest(results);
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Test Results</h2>
-      {Object.entries(grouped).map(([testId, group]) => (
-        <div key={testId} className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">{group.test_name}</h3>
-          <h5>
-            You have {group.results.length} result
-            {group.results.length !== 1 ? "s" : ""} for this test.
-          </h5>
-          <ul className="ml-4 list-disc">
-            {group.results.map((r) => (
-              <li key={r.id}>
-                Score: {r.score}
-                {r.completed_at && (
-                  <> (Completed: {new Date(r.completed_at).toLocaleString()})</>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div className="w-full max-w-2xl mx-auto px-8 py-8">
+      <h2 className="text-3xl font-bold text-center text-slate-800 mb-8">
+        📊 Test Results
+      </h2>
+
+      <div className="space-y-6">
+        {Object.entries(grouped).map(([testId, group]) => (
+          <div
+            key={testId}
+            className="bg-white shadow-sm border border-slate-200 rounded-lg p-6"
+          >
+            <h3 className="text-xl font-semibold text-slate-700 mb-2">
+              {group.test_name}
+            </h3>
+            <p className="text-sm text-slate-500 mb-4">
+              You have {group.results.length} result
+              {group.results.length !== 1 ? "s" : ""} for this test.
+            </p>
+
+            <ul className="space-y-2">
+              {group.results.map((r) => (
+                <li
+                  key={r.id}
+                  className="flex justify-between items-center bg-slate-50 px-4 py-2 rounded-md border"
+                >
+                  <span className="text-slate-700 font-medium">
+                    Score: {r.score}
+                  </span>
+                  {r.completed_at && (
+                    <span className="text-sm text-slate-500">
+                      {new Date(r.completed_at).toLocaleString()}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -21,22 +21,28 @@ import { AssignTest } from "./pages/teacher/AssignTest";
 import AdminUserListPanel from "./pages/admin/AdminUserListPanel";
 import "./App.css";
 import StyleGuide from "./pages/StyleGuide";
+import NavBar from "./pages/NavBar";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
     <Router>
+      <NavBar></NavBar>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
 
         <Route
           path="/student/*"
           element={
             <RequireAuth allowedRoles={["student", "admin"]}>
+              <div className="flex flex-col min-h-screen">
               <Routes>
                 <Route path="" element={<StudentDashboard />} />
                 <Route path="test/:testId" element={<TestPage />} />
                 <Route path="results" element={<TestResults />} />
               </Routes>
+              </div>
             </RequireAuth>
           }
         />

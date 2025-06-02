@@ -47,7 +47,7 @@ const StudentDashboard = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="min-h-screen w-full px-4 py-6">
       <h2>Student Dashboard</h2>
       <p>Welcome! From here you can take tests and view your results.</p>
       <div

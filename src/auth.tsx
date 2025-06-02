@@ -10,9 +10,10 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  logout: () => void;
 }
 
-// Default empty context so TS doesn’t complain
+// Default empty context
 export const UserContext = createContext<AuthContextType | undefined>(undefined);
 
 export function useAuth() {
@@ -25,13 +26,18 @@ export function useAuth() {
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+
+  const logout = () => {
+    setUser(null);
+    // optionally clear sessionStorage or localStorage here if needed
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, logout }}>
       {children}
     </UserContext.Provider>
   );
 }
-
 
 export function RequireAuth({
   children,
@@ -44,12 +50,10 @@ export function RequireAuth({
   const { user } = useAuth();
 
   if (!user) {
-    // Not logged in
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (!allowedRoles.includes(user.role)) {
-    // Role not allowed
     return <Navigate to="/login" replace />;
   }
 
