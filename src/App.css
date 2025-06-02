@@ -1,42 +1,72 @@
-#root {
-  max-width: 1280px;
+@import "tailwindcss";
+
+:root {
+  --primary: #3a86ff;
+  --accent: #ffbe0b;
+  --danger: #ef233c;
+  --bg: #f8f9fa;
+  --fg: #1c1c1c;
+  --radius: 8px;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.container {
+  max-width: 960px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+header h1 {
+  font-size: 2rem;
   text-align: center;
+  color: var(--primary);
+  margin-bottom: 2rem;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.panel {
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.panel h2 {
+  margin-top: 0;
 }
 
-.card {
-  padding: 2em;
+button {
+  background: var(--primary);
+  color: white;
+  padding: 0.6em 1em;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  cursor: pointer;
 }
 
-.read-the-docs {
-  color: #888;
+button:hover {
+  background: #265acc;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.6em;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  font-size: 1rem;
 }

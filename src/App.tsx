@@ -6,18 +6,21 @@ import {
 } from "react-router-dom";
 import { RequireAuth } from "./auth";
 import Login from "./pages/Login";
-import StudentDashboard from "./pages/StudentDashboard";
-import TestPage from "./pages/TestPage";
-import TeacherDashboard from "./pages/TeacherDashboard";
-import TeacherStudentList from "./pages/TeacherStudentList";
-import StudentResultsPage from "./pages/StudentResultsPage";
-import TestsList from "./pages/TestsList";
-import { CreateTest } from "./pages/CreateTest";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminUserManagement from "./pages/AdminUserManagement";
-import TestResults from "./pages/TestResults";
-import { AddQuestion } from "./pages/AddQuestion";
-import { AssignTest } from "./pages/AssignTest";
+import StudentDashboard from "./pages/student/StudentDashboard";
+import TestPage from "./pages/student/TestPage";
+import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import TeacherStudentList from "./pages/teacher/TeacherStudentList";
+import StudentResultsPage from "./pages/student/StudentResultsPage";
+import TestsList from "./pages/student/TestsList";
+import { CreateTest } from "./pages/teacher/CreateTest";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminAssignmentPanel from "./pages/admin/AdminAssignmentPanel";
+import TestResults from "./pages/student/TestResults";
+import { AddQuestion } from "./pages/teacher/AddQuestion";
+import { AssignTest } from "./pages/teacher/AssignTest";
+import AdminUserListPanel from "./pages/admin/AdminUserListPanel";
+import "./App.css";
+import StyleGuide from "./pages/StyleGuide";
 
 function App() {
   return (
@@ -51,7 +54,10 @@ function App() {
                 />
                 <Route path="tests" element={<TestsList />} />
                 <Route path="tests/create" element={<CreateTest />} />
-                <Route path="tests/:testId/add-question" element={<AddQuestion />} />
+                <Route
+                  path="tests/:testId/add-question"
+                  element={<AddQuestion />}
+                />
                 <Route path="tests/:testId/assign" element={<AssignTest />} />
               </Routes>
             </RequireAuth>
@@ -64,13 +70,15 @@ function App() {
             <RequireAuth allowedRoles={["admin"]}>
               <Routes>
                 <Route path="" element={<AdminDashboard />} />
-                <Route path="users" element={<AdminUserManagement />} />
+                <Route path="users" element={<AdminUserListPanel />} />
+                <Route path="assignments" element={<AdminAssignmentPanel />} />
               </Routes>
             </RequireAuth>
           }
         />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="style-guide" element={<StyleGuide />} />
       </Routes>
     </Router>
   );
