@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 import CreateUserForm from "../CreateUserForm";
 
 type User = {
@@ -24,10 +24,6 @@ type Test = {
 
 export default function AdminAssignmentPanel() {
   const { user } = useAuth();
-  // For creating users
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"student" | "teacher">("student");
 
   // For assigning students to teachers
   const [teachers, setTeachers] = useState<User[]>([]);
@@ -69,41 +65,7 @@ export default function AdminAssignmentPanel() {
       }
     }
     fetchData();
-  }, []);
-
-  async function handleCreateUser(e: React.FormEvent) {
-    e.preventDefault();
-    if (!username || !password) return alert("Fill all fields");
-
-    try {
-      await axios.post(
-        "/api/admin/create-user",
-        { username, password, role },
-        {
-          headers: {
-            "x-user-id": user?.id,
-            "x-user-role": user?.role,
-          },
-        }
-      );
-      alert("User created!");
-      setUsername("");
-      setPassword("");
-      // Reload users to update teacher/student lists
-      const usersRes = await axios.get<PaginatedUsersResponse>(
-        "/api/admin/users",
-        {
-          headers: { "x-user-id": user?.id, "x-user-role": user?.role },
-        }
-      );
-      const allUsers = usersRes.data.users;
-      setTeachers(allUsers.filter((u) => u.role === "teacher"));
-      setStudents(allUsers.filter((u) => u.role === "student"));
-    } catch (err) {
-      console.log(err);
-      alert("Failed to create user");
-    }
-  }
+  }, [user?.id, user?.role]);
 
   async function handleAssignStudent() {
     if (!selectedTeacherId || !selectedStudentId)

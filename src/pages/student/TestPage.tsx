@@ -3,13 +3,27 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "katex/dist/katex.min.css";
 import { InlineMath } from "react-katex";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 
-type Question = {
+export interface Question {
   id: number;
+  test_id: number;
+  order: number;
   question_text: string;
-  choices: Record<string, string>;
-};
+  choices: Record<string, string>; // parsed JSON object like { A: "Option A", B: "Option B", ... }
+  correct_choice: string;
+  explanation: string;
+}
+
+export interface RawQuestion {
+  id: number;
+  test_id: number;
+  order: number;
+  question_text: string;
+  choices: string; // raw JSON string
+  correct_choice: string;
+  explanation: string;
+}
 
 type Answer = {
   question_id: number;
@@ -49,7 +63,7 @@ export default function TestPage() {
       .then((res) => {
         // Assume res.data has shape { name: string, questions: [...] }
         const questionsWithParsedChoices: Question[] = res.data.map(
-          (q: any) => ({
+          (q: RawQuestion) => ({
             ...q,
             choices: JSON.parse(q.choices),
           })
@@ -86,7 +100,6 @@ export default function TestPage() {
     // }
   };
 
-
   const toggleMarkForReview = () => {
     if (!currentQuestion) return;
     setMarkedForReview((prev) =>
@@ -110,10 +123,6 @@ export default function TestPage() {
 
   const openReview = () => {
     setShowReviewScreen(true);
-  };
-
-  const closeReview = () => {
-    setShowReviewScreen(false);
   };
 
   const submitTest = () => {
@@ -182,7 +191,9 @@ export default function TestPage() {
                   focus:outline-none focus:ring-4 focus:ring-purple-300`}
               >
                 <span className="font-bold mr-3 text-lg">{key}.</span>
-                <span className="inline-block text-lg">{parseRichText(value)}</span>
+                <span className="inline-block text-lg">
+                  {parseRichText(value)}
+                </span>
                 {isSelected && (
                   <span className="absolute top-2 right-3 text-white font-bold text-xl select-none">
                     ✓

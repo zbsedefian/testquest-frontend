@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 
 // Types
 type Role = "student" | "teacher" | "admin";
@@ -30,8 +30,10 @@ function Spinner() {
   );
 }
 
-// Focus trap hook
-function useFocusTrap(ref: React.RefObject<HTMLDivElement>, active: boolean) {
+function useFocusTrap(
+  ref: React.RefObject<HTMLDivElement | null>,
+  active: boolean
+) {
   useEffect(() => {
     if (!active || !ref.current) return;
 
@@ -288,7 +290,7 @@ export default function AdminUserListPanel() {
   const [loadingRelated, setLoadingRelated] = useState(false);
 
   // Fetch users
-  async function fetchUsers() {
+  const fetchUsers = useCallback(async () => {
     console.log("Fetching users page:", page);
     setLoadingUsers(true);
     try {
@@ -309,13 +311,13 @@ export default function AdminUserListPanel() {
     } finally {
       setLoadingUsers(false);
     }
-  }
+  }, [page, roleFilter, searchTerm, user?.id, user?.role]);
 
   useEffect(() => {
     fetchUsers();
     setExpandedUserId(null);
     setRelatedUsers(null);
-  }, [roleFilter, searchTerm, page]);
+  }, [fetchUsers]);
 
   // Fetch related users for expanded row
   async function fetchRelatedUsers(userId: number) {

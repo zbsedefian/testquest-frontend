@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 
 type Result = {
   id: number;
@@ -23,7 +23,7 @@ export default function StudentResultsPage() {
       })
       .then((res) => setResults(res.data))
       .catch(console.error);
-  }, [studentId]);
+  }, [studentId, user?.id, user?.role]);
 
   return (
     <div className="p-4">

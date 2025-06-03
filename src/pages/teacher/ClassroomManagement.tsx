@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 
 type Classroom = {
   id: number;
@@ -10,7 +10,6 @@ type Classroom = {
 const ClassroomManagement = () => {
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [newClassName, setNewClassName] = useState("");
-  const [teacherId, setTeacherId] = useState<number>(1); // Default teacherId, replace with auth-based value
   const { user } = useAuth();
 
   const fetchClassrooms = async () => {
@@ -39,7 +38,7 @@ const ClassroomManagement = () => {
 
   useEffect(() => {
     fetchClassrooms();
-  }, []);
+  });
 
   return (
     <div className="p-6 max-w-3xl mx-auto">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 
 interface Test {
   id: number;
@@ -41,7 +41,7 @@ const StudentDashboard = () => {
       }
     }
     fetchTests();
-  }, []);
+  }, [user?.id, user?.role]);
 
   if (loading) return <p>Loading tests...</p>;
   if (error) return <p>{error}</p>;

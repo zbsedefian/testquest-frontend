@@ -1,21 +1,21 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth";
+import { useAuth } from "../auth-context";
 
 export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const { user, setUser } = useAuth();
+  const [error] = useState("");
+  const { setUser } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await axios.post("api/auth/login", { username, password });
       const user = res.data;
-      setUser(user)
+      setUser(res.data);
       navigate(`/${user.role}`);
     } catch (err) {
       alert("Login failed");

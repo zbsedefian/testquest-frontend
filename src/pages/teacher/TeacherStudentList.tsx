@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -18,7 +18,7 @@ export default function TeacherStudentList() {
       })
       .then((res) => setStudents(res.data))
       .catch(console.error);
-  }, []);
+  }, [user?.id, user?.role]);
 
   return (
     <div className="p-4">

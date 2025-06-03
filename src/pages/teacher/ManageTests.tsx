@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TestsList from "./TestsList";
 import { CreateTest } from "./CreateTest";
 import { AddQuestion } from "./AddQuestion";
 import { AssignTest } from "./AssignTest";
 
 export default function ManageTests() {
-  const [selectedTestId, setSelectedTestId] = useState<number | null>(null);
+  const [selectedTestId] = useState<number | null>(null);
   const [mode, setMode] = useState<"list" | "create" | "edit" | "assign">(
     "list"
   );
@@ -16,16 +16,7 @@ export default function ManageTests() {
 
       {mode === "list" && (
         <>
-          <TestsList
-            onEdit={(testId) => {
-              setSelectedTestId(testId);
-              setMode("edit");
-            }}
-            onAssign={(testId) => {
-              setSelectedTestId(testId);
-              setMode("assign");
-            }}
-          />
+          <TestsList />
           <button
             className="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             onClick={() => setMode("create")}
@@ -35,33 +26,11 @@ export default function ManageTests() {
         </>
       )}
 
-      {mode === "create" && (
-        <CreateTest
-          onDone={() => {
-            setMode("list");
-          }}
-        />
-      )}
+      {mode === "create" && <CreateTest />}
 
-      {mode === "edit" && selectedTestId && (
-        <AddQuestion
-          testId={selectedTestId}
-          onBack={() => {
-            setMode("list");
-            setSelectedTestId(null);
-          }}
-        />
-      )}
+      {mode === "edit" && selectedTestId && <AddQuestion />}
 
-      {mode === "assign" && selectedTestId && (
-        <AssignTest
-          testId={selectedTestId}
-          onClose={() => {
-            setMode("list");
-            setSelectedTestId(null);
-          }}
-        />
-      )}
+      {mode === "assign" && selectedTestId && <AssignTest />}
     </div>
   );
 }

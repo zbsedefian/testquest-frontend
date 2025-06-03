@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
+import type { User } from "../../auth";
+
+export interface Test {
+  id: number;
+  name: string;
+  created_by: number;
+}
 
 export function AssignTest() {
   const { user } = useAuth();
-  const [students, setStudents] = useState([]);
-  const [tests, setTests] = useState([]);
+  const [students, setStudents] = useState<User[]>([]);
+  const [tests, setTests] = useState<Test[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState<number | "">("");
   const [selectedTestId, setSelectedTestId] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
@@ -52,8 +59,8 @@ export function AssignTest() {
         }
       );
       setMessage("✅ Test assigned successfully.");
-    } catch (err: any) {
-      if (err.response?.status === 409) {
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
         setMessage("❌ This student has already been assigned to that test.");
       } else {
         setMessage("❌ Failed to assign test.");

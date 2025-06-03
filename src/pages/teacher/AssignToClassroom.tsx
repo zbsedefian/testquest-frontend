@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 
 interface Classroom {
   id: number;
@@ -28,7 +28,7 @@ export default function AssignToClassroom() {
           },
         });
         setClassrooms(res.data);
-      } catch (err) {
+      } catch {
         setMessage("❌ Failed to load classrooms.");
       }
     }
@@ -61,7 +61,7 @@ export default function AssignToClassroom() {
         }
       );
       setMessage("✅ Test assigned to classroom successfully.");
-    } catch (err) {
+    } catch {
       setMessage("❌ Failed to assign test to classroom.");
     } finally {
       setLoading(false);

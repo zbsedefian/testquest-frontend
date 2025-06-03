@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 import { useParams } from "react-router-dom";
 
 export function AddQuestion() {
@@ -10,7 +10,9 @@ export function AddQuestion() {
   const [choices, setChoices] = useState({ A: "", B: "", C: "", D: "" });
   const [correctChoice, setCorrectChoice] = useState("A");
   const [explanation, setExplanation] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
 
   const handleChangeChoice = (key: keyof typeof choices, value: string) => {
     setChoices((prev) => ({ ...prev, [key]: value }));

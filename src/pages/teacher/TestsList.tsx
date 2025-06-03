@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../auth";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../auth-context";
 
 export interface Test {
   id: number;
@@ -14,7 +14,6 @@ export default function TestsList() {
   const [tests, setTests] = useState<Test[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) return;

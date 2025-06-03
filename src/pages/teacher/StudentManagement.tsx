@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "../../auth";
-import CreateUserForm from "../CreateUserForm";
+import { useAuth } from "../../auth-context";
 import CreateStudent from "./CreateStudent";
 import ManageStudentClassrooms from "./ManageStudentClassrooms";
 
@@ -19,7 +18,6 @@ export default function StudentManagement() {
   const { user } = useAuth();
   const [students, setStudents] = useState<User[]>([]);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
-  const [loading, setLoading] = useState(false);
   const [showCreateStudent, setShowCreateStudent] = useState(false);
   const [showClassModal, setShowClassModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<User | null>(null);
@@ -40,29 +38,10 @@ export default function StudentManagement() {
     setClassrooms(res.data);
   };
 
-  const assignStudentToClassroom = async (
-    studentId: number,
-    classroomId: number
-  ) => {
-    try {
-      await axios.post(
-        `/api/classrooms/${classroomId}/students`,
-        { student_ids: [studentId] },
-        {
-          headers: { "x-user-id": user?.id, "x-user-role": user?.role },
-        }
-      );
-      alert("Student assigned!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to assign student.");
-    }
-  };
-
   useEffect(() => {
     fetchStudents();
     fetchClassrooms();
-  }, []);
+  });
 
   return (
     <div className="p-6 max-w-5xl mx-auto">

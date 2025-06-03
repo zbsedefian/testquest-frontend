@@ -1,12 +1,13 @@
 // frontend/src/components/CreateUserForm.tsx
 import { useState } from "react";
 import axios from "axios";
-import { useAuth } from "../auth";
+import { useAuth } from "../auth-context";
+import type { User } from "../auth";
 
 type Role = "student" | "teacher";
 
 type CreateUserFormProps = {
-  onUserCreated?: (newUser?: any) => void;
+  onUserCreated?: (newUser?: User) => void;
 };
 
 export default function CreateUserForm({ onUserCreated }: CreateUserFormProps) {

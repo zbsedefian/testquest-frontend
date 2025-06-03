@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../../auth-context";
 
 type Classroom = {
   id: number;
@@ -50,7 +50,7 @@ export default function ManageStudentClassrooms({
     };
 
     fetchAssigned();
-  }, [student]);
+  }, [student, user?.id, user?.role]);
 
   const handleToggle = (id: number) => {
     setAssigned((prev) =>
