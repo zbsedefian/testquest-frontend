@@ -5,14 +5,12 @@ import { useAuth } from "../../auth";
 export function CreateTest() {
   const { user } = useAuth();
   const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  async function handleCreateTest(e: React.FormEvent) {
+  const handleCreateTest = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+    setStatus("loading");
+
     try {
       await axios.post(
         "/api/teacher/tests",
@@ -24,30 +22,35 @@ export function CreateTest() {
           },
         }
       );
-      setSuccess(true);
       setName("");
+      setStatus("success");
     } catch {
-      setError("Failed to create test.");
-    } finally {
-      setLoading(false);
+      setStatus("error");
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleCreateTest}>
+    <form onSubmit={handleCreateTest} className="space-y-4">
       <label>
         Test Name:
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          className="border px-2 py-1"
         />
       </label>
-      <button type="submit" disabled={loading}>
-        {loading ? "Creating..." : "Create Test"}
+
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+        disabled={status === "loading"}
+      >
+        {status === "loading" ? "Creating..." : "Create Test"}
       </button>
-      {error && <p>{error}</p>}
-      {success && <p>Test created successfully!</p>}
+
+      {status === "success" && <p>✅ Test created!</p>}
+      {status === "error" && <p>❌ Failed to create test.</p>}
     </form>
   );
 }

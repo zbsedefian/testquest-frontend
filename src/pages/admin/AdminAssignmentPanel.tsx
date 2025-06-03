@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../auth";
+import CreateUserForm from "../CreateUserForm";
 
 type User = {
   id: number;
@@ -156,50 +157,7 @@ export default function AdminAssignmentPanel() {
     <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
-      <section className="mb-6 border p-4 rounded">
-        <h2 className="text-xl mb-2">Create User</h2>
-        <form onSubmit={handleCreateUser}>
-          <label>
-            Username:{" "}
-            <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="border px-2 py-1"
-            />
-          </label>
-          <br />
-          <label>
-            Password:{" "}
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="border px-2 py-1"
-            />
-          </label>
-          <br />
-          <label>
-            Role:{" "}
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value as "student" | "teacher")}
-              className="border px-2 py-1"
-            >
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-            </select>
-          </label>
-          <br />
-          <button
-            type="submit"
-            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Create User
-          </button>
-        </form>
-      </section>
+      <CreateUserForm />
 
       <section className="mb-6 border p-4 rounded">
         <h2 className="text-xl mb-2">Assign Student to Teacher</h2>

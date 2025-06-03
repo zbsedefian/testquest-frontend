@@ -552,20 +552,18 @@ export default function AdminUserListPanel() {
           Next
         </button>
       </footer>
-
-      <button
-        onClick={openCreate}
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-      >
-        + Create New User
-      </button>
-      {/* User modal */}
       <UserModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onUserSaved={fetchUsers}
         editingUser={editingUser}
       />
+      <button
+        onClick={openCreate}
+        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+      >
+        + Create New User
+      </button>
     </div>
   );
 }

@@ -11,7 +11,7 @@ import TestPage from "./pages/student/TestPage";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import TeacherStudentList from "./pages/teacher/TeacherStudentList";
 import StudentResultsPage from "./pages/student/StudentResultsPage";
-import TestsList from "./pages/student/TestsList";
+import TestsList from "./pages/teacher/TestsList";
 import { CreateTest } from "./pages/teacher/CreateTest";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminAssignmentPanel from "./pages/admin/AdminAssignmentPanel";
@@ -23,6 +23,10 @@ import "./App.css";
 import StyleGuide from "./pages/StyleGuide";
 import NavBar from "./pages/NavBar";
 import Profile from "./pages/Profile";
+import ClassroomManagement from "./pages/teacher/ClassroomManagement";
+import StudentManagement from "./pages/teacher/StudentManagement";
+import ManageTests from "./pages/teacher/ManageTests";
+import AssignToClassroom from "./pages/teacher/AssignToClassroom";
 
 function App() {
   return (
@@ -37,11 +41,11 @@ function App() {
           element={
             <RequireAuth allowedRoles={["student", "admin"]}>
               <div className="flex flex-col min-h-screen">
-              <Routes>
-                <Route path="" element={<StudentDashboard />} />
-                <Route path="test/:testId" element={<TestPage />} />
-                <Route path="results" element={<TestResults />} />
-              </Routes>
+                <Routes>
+                  <Route path="" element={<StudentDashboard />} />
+                  <Route path="test/:testId" element={<TestPage />} />
+                  <Route path="results" element={<TestResults />} />
+                </Routes>
               </div>
             </RequireAuth>
           }
@@ -53,18 +57,24 @@ function App() {
             <RequireAuth allowedRoles={["teacher", "admin"]}>
               <Routes>
                 <Route path="" element={<TeacherDashboard />} />
-                <Route path="students" element={<TeacherStudentList />} />
+                {/* <Route path="students" element={<TeacherStudentList />} /> */}
                 <Route
                   path="student/:studentId/results"
                   element={<StudentResultsPage />}
                 />
-                <Route path="tests" element={<TestsList />} />
+                <Route path="tests" element={<ManageTests />} />
                 <Route path="tests/create" element={<CreateTest />} />
                 <Route
                   path="tests/:testId/add-question"
                   element={<AddQuestion />}
                 />
                 <Route path="tests/:testId/assign" element={<AssignTest />} />
+                <Route path="students" element={<StudentManagement />} />
+                <Route path="classrooms" element={<ClassroomManagement />} />
+                <Route
+                  path="tests/:testId/assign-classroom"
+                  element={<AssignToClassroom />}
+                />
               </Routes>
             </RequireAuth>
           }

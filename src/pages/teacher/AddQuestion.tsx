@@ -5,98 +5,107 @@ import { useParams } from "react-router-dom";
 
 export function AddQuestion() {
   const { user } = useAuth();
-  const { testId } = useParams<{ testId: string }>();
-  const userId = user?.id;
+  const { testId } = useParams();
   const [questionText, setQuestionText] = useState("");
-  const [choices, setChoices] = useState(
-    '{ "A": "", "B": "", "C": "", "D": "" }'
-  );
+  const [choices, setChoices] = useState({ A: "", B: "", C: "", D: "" });
   const [correctChoice, setCorrectChoice] = useState("A");
   const [explanation, setExplanation] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  async function handleAddQuestion(e: React.FormEvent) {
+  const handleChangeChoice = (key: keyof typeof choices, value: string) => {
+    setChoices((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccess(false);
+    setStatus("loading");
 
     try {
       await axios.post(
         `/api/teacher/tests/${testId}/questions`,
         {
           question_text: questionText,
-          choices,
+          choices: JSON.stringify(choices),
           correct_choice: correctChoice,
           explanation,
-          order: 1, // You can make this dynamic if you want
+          order: 1,
         },
         {
           headers: {
-            "x-user-id": userId?.toString(),
+            "x-user-id": user?.id,
             "x-user-role": user?.role,
           },
         }
       );
-      setSuccess(true);
       setQuestionText("");
-      setChoices('{ "A": "", "B": "", "C": "", "D": "" }');
+      setChoices({ A: "", B: "", C: "", D: "" });
       setCorrectChoice("A");
       setExplanation("");
+      setStatus("success");
     } catch {
-      setError("Failed to add question.");
-    } finally {
-      setLoading(false);
+      setStatus("error");
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleAddQuestion}>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <label>
-        Question Text:
+        Question:
         <textarea
           value={questionText}
           onChange={(e) => setQuestionText(e.target.value)}
           required
+          className="w-full border px-2 py-1"
         />
       </label>
+
+      {["A", "B", "C", "D"].map((letter) => (
+        <label key={letter}>
+          Choice {letter}:
+          <input
+            value={choices[letter as keyof typeof choices]}
+            onChange={(e) =>
+              handleChangeChoice(letter as keyof typeof choices, e.target.value)
+            }
+            className="w-full border px-2 py-1"
+          />
+        </label>
+      ))}
+
       <label>
-        Choices (JSON):
-        <textarea
-          value={choices}
-          onChange={(e) => setChoices(e.target.value)}
-          required
-          rows={4}
-        />
-      </label>
-      <label>
-        Correct Choice:
+        Correct Answer:
         <select
           value={correctChoice}
           onChange={(e) => setCorrectChoice(e.target.value)}
-          required
+          className="border px-2 py-1"
         >
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-          <option value="D">D</option>
+          {["A", "B", "C", "D"].map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
         </select>
       </label>
+
       <label>
         Explanation:
         <textarea
           value={explanation}
           onChange={(e) => setExplanation(e.target.value)}
-          rows={3}
+          className="w-full border px-2 py-1"
         />
       </label>
-      <button type="submit" disabled={loading}>
-        {loading ? "Adding..." : "Add Question"}
+
+      <button
+        type="submit"
+        className="bg-green-600 text-white px-4 py-2 rounded"
+        disabled={status === "loading"}
+      >
+        {status === "loading" ? "Adding..." : "Add Question"}
       </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>Question added!</p>}
+
+      {status === "success" && <p>✅ Question added!</p>}
+      {status === "error" && <p>❌ Failed to add question.</p>}
     </form>
   );
 }
