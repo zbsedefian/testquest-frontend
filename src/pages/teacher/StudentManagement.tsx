@@ -41,7 +41,7 @@ export default function StudentManagement() {
   useEffect(() => {
     fetchStudents();
     fetchClassrooms();
-  });
+  }, []);
 
   return (
     <div className="p-6 max-w-5xl mx-auto">

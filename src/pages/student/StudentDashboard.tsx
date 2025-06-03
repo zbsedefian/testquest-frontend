@@ -48,7 +48,9 @@ const StudentDashboard = () => {
 
   return (
     <div className="min-h-screen w-full px-4 py-6">
-      <h2>Student Dashboard</h2>
+      <h2 className="text-3xl font-bold text-gray-800 mb-4">
+        Student Dashboard
+      </h2>
       <p>Welcome! From here you can take tests and view your results.</p>
       <div
         style={{

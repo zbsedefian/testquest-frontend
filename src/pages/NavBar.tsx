@@ -64,6 +64,9 @@ export default function NavBar() {
               <Link to="/teacher/students" className="hover:text-blue-600">
                 Students
               </Link>
+              <Link to="/teacher/classrooms" className="hover:text-blue-600">
+                Classrooms
+              </Link>
             </>
           )}
           {user.role === "admin" && (

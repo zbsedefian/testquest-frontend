@@ -38,7 +38,7 @@ const ClassroomManagement = () => {
 
   useEffect(() => {
     fetchClassrooms();
-  });
+  }, [user]);
 
   return (
     <div className="p-6 max-w-3xl mx-auto">

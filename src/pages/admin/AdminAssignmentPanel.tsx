@@ -117,7 +117,7 @@ export default function AdminAssignmentPanel() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+      <h2 className="text-3xl font-bold text-gray-800 mb-4">Admin Dashboard</h2>
 
       <CreateUserForm />
 
