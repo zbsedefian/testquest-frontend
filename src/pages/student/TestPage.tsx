@@ -61,14 +61,17 @@ export default function TestPage() {
         headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       })
       .then((res) => {
-        // Assume res.data has shape { name: string, questions: [...] }
-        const questionsWithParsedChoices: Question[] = res.data.map(
+        // res.data has shape { name: string; questions: RawQuestion[] }
+        const { name, questions: rawQuestions } = res.data;
+
+        const questionsWithParsedChoices: Question[] = rawQuestions.map(
           (q: RawQuestion) => ({
             ...q,
             choices: JSON.parse(q.choices),
           })
         );
-        setTestName(res.data.name);
+
+        setTestName(name);
         setQuestions(questionsWithParsedChoices);
         setLoading(false);
       });
