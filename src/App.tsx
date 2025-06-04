@@ -12,10 +12,9 @@ import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import StudentResultsPage from "./pages/student/StudentResultsPage";
 import { CreateTest } from "./pages/teacher/CreateTest";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminAssignmentPanel from "./pages/admin/AdminAssignmentPanel";
 import TestResults from "./pages/student/TestResults";
 import { AddQuestion } from "./pages/teacher/AddQuestion";
-import { AssignTest } from "./pages/teacher/AssignTest";
+import { AssignTest } from "./pages/teacher/AssignTestModal";
 import AdminUserListPanel from "./pages/admin/AdminUserListPanel";
 import "./App.css";
 import StyleGuide from "./pages/StyleGuide";
@@ -25,6 +24,7 @@ import ClassroomManagement from "./pages/teacher/ClassroomManagement";
 import StudentManagement from "./pages/teacher/StudentManagement";
 import ManageTests from "./pages/teacher/ManageTests";
 import AssignToClassroom from "./pages/teacher/AssignToClassroom";
+import AdminClassroomManagement from "./pages/admin/AdminClassroomManagement";
 
 function App() {
   return (
@@ -85,7 +85,11 @@ function App() {
               <Routes>
                 <Route path="" element={<AdminDashboard />} />
                 <Route path="users" element={<AdminUserListPanel />} />
-                <Route path="assignments" element={<AdminAssignmentPanel />} />
+                <Route
+                  path="classrooms"
+                  element={<AdminClassroomManagement />}
+                />
+                <Route path="tests" element={<ManageTests />} />
               </Routes>
             </RequireAuth>
           }

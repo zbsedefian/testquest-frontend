@@ -3,16 +3,8 @@ import axios from "axios";
 import { useAuth } from "../../auth-context";
 import CreateStudent from "./CreateStudent";
 import ManageStudentClassrooms from "./ManageStudentClassrooms";
+import type { Classroom, User } from "../../types";
 
-type User = {
-  id: number;
-  username: string;
-};
-
-type Classroom = {
-  id: number;
-  name: string;
-};
 
 export default function StudentManagement() {
   const { user } = useAuth();

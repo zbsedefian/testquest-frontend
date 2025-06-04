@@ -11,18 +11,26 @@ const AdminDashboard = () => {
       <ul className="space-y-4">
         <li>
           <Link
-            to="/admin/users"
-            className="block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-900 transition"
+            to="/admin/tests"
+            className="block bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-900 transition"
           >
-            👤 Manage Users
+            📝 Manage Assignments
           </Link>
         </li>
         <li>
           <Link
-            to="/admin/assignments"
+            to="/admin/classrooms"
             className="block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-900 transition"
           >
-            📝 Assign Students and Tests
+            📝 Manage Classrooms
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/admin/users"
+            className="block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-900 transition"
+          >
+            👤 Manage Users
           </Link>
         </li>
       </ul>

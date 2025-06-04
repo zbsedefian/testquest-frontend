@@ -59,7 +59,7 @@ export default function NavBar() {
           {user.role === "teacher" && (
             <>
               <Link to="/teacher/tests" className="hover:text-blue-600">
-                Manage Tests
+                Manage Assignments
               </Link>
               <Link to="/teacher/students" className="hover:text-blue-600">
                 Students
@@ -70,9 +70,17 @@ export default function NavBar() {
             </>
           )}
           {user.role === "admin" && (
-            <Link to="/admin/users" className="hover:text-blue-600">
-              Users
-            </Link>
+            <>
+              <Link to="/admin/tests" className="hover:text-blue-600">
+                Assignments
+              </Link>
+              <Link to="/admin/classrooms" className="hover:text-blue-600">
+                Classrooms
+              </Link>
+              <Link to="/admin/users" className="hover:text-blue-600">
+                Users
+              </Link>
+            </>
           )}
 
           {/* User dropdown */}

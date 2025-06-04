@@ -48,7 +48,7 @@ export default function AssignToClassroom() {
 
     try {
       await axios.post(
-        "/api/teacher/assign-test-to-classroom",
+        "/api/assign-test-to-classroom",
         {
           classroom_id: selectedClassroomId,
           test_id: Number(testId),

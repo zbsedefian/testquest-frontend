@@ -1,11 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../auth-context";
-import { useParams } from "react-router-dom";
 
-export function AddQuestion() {
+type Props = {
+  testId: number;
+};
+
+export function AddQuestion({ testId }: Props) {
   const { user } = useAuth();
-  const { testId } = useParams();
   const [questionText, setQuestionText] = useState("");
   const [choices, setChoices] = useState({ A: "", B: "", C: "", D: "" });
   const [correctChoice, setCorrectChoice] = useState("A");
