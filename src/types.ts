@@ -38,3 +38,9 @@ export type ClassroomWithUsers = {
   teachers: User[];
   students: User[];
 };
+
+export interface ClassroomWithStudents {
+  classroom_id: number;
+  classroom_name: string;
+  students: User[];
+}

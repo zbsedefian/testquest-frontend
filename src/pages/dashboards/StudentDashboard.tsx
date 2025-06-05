@@ -94,7 +94,10 @@ const StudentDashboard = () => {
         ))}
       </div>
       <div style={{ marginTop: 30 }}>
-        <Link to="/student/results" style={{ fontWeight: "bold" }}>
+        <Link
+          to={`/student/${user?.id}/history`}
+          style={{ fontWeight: "bold" }}
+        >
           View My Test Results →
         </Link>
       </div>

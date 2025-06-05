@@ -2,10 +2,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "../../auth-context";
 import type { RelatedUsers, User, PaginatedResponse } from "../../types";
-import { UserModal } from "./UserModal";
 import { Spinner } from "../../components/Spinner";
+import { UserModal } from "./UserModal";
 
-export default function AdminUserListPanel() {
+export default function UserManagement() {
   const { user } = useAuth();
 
   const [users, setUsers] = useState<User[]>([]);

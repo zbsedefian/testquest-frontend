@@ -51,7 +51,10 @@ export default function NavBar() {
               <Link to="/student" className="hover:text-blue-600">
                 Tests
               </Link>
-              <Link to="/student/results" className="hover:text-blue-600">
+              <Link
+                to={`/student/${user?.id}/history`}
+                className="hover:text-blue-600"
+              >
                 Results
               </Link>
             </>
@@ -61,11 +64,8 @@ export default function NavBar() {
               <Link to="/teacher/tests" className="hover:text-blue-600">
                 Manage Assignments
               </Link>
-              <Link to="/teacher/students" className="hover:text-blue-600">
-                Students
-              </Link>
-              <Link to="/teacher/classrooms" className="hover:text-blue-600">
-                Classrooms
+              <Link to="/teacher/my-students" className="hover:text-blue-600">
+                My Students
               </Link>
             </>
           )}

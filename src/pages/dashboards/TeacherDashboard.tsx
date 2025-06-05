@@ -21,18 +21,10 @@ const TeacherDashboard = () => {
         </li>
         <li>
           <Link
-            to="/teacher/students"
+            to="/teacher/my-students"
             className="block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-900 transition"
           >
-            👥 Manage Students
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/teacher/classrooms"
-            className="block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-900 transition"
-          >
-            🏫 Manage Classrooms
+            👥 My Students
           </Link>
         </li>
       </ul>

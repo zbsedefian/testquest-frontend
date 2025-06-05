@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../auth-context";
 
@@ -22,15 +23,24 @@ const groupByTest = (results: TestResult[]) => {
 };
 
 export default function TestResults() {
+  const { studentId } = useParams();
+  const [searchParams] = useSearchParams();
+  const classroomId = searchParams.get("classroomId");
+
   const [results, setResults] = useState<TestResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !studentId) return;
+
+    const endpoint = `/api/teacher/student/${studentId}/history${
+      classroomId ? `?classroom_id=${classroomId}` : ""
+    }`;
+
     axios
-      .get("/api/student/test-results", {
+      .get(endpoint, {
         headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       })
       .then((res) => {
@@ -42,11 +52,10 @@ export default function TestResults() {
         setLoading(false);
         console.error(err);
       });
-  }, [user]);
+  }, [user, studentId, classroomId]);
 
   if (!user) return <p className="text-center text-gray-500">Please log in.</p>;
-  if (loading)
-    return <p className="text-center text-gray-500">Loading results...</p>;
+  if (loading) return <p className="text-center text-gray-500">Loading results...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
   if (results.length === 0)
     return <p className="text-center text-gray-500">No test results found.</p>;
@@ -69,7 +78,7 @@ export default function TestResults() {
               {group.test_name}
             </h3>
             <p className="text-sm text-slate-500 mb-4">
-              You have {group.results.length} result
+              {group.results.length} result
               {group.results.length !== 1 ? "s" : ""} for this test.
             </p>
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth-context";
+import { useAuth } from "../../auth-context";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -69,6 +69,12 @@ export default function Login() {
           >
             Log in
           </button>
+          <p className="text-sm text-center mt-4 text-white">
+            Don’t have an account?{" "}
+            <a href="/signup" className="text-blue-600 hover:underline">
+              Sign up
+            </a>
+          </p>
         </form>
       </div>
     </div>

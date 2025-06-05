@@ -5,26 +5,20 @@ import {
   Navigate,
 } from "react-router-dom";
 import { RequireAuth } from "./auth";
-import Login from "./pages/Login";
-import StudentDashboard from "./pages/student/StudentDashboard";
+import Login from "./pages/login/Login";
+import StudentDashboard from "./pages/dashboards/StudentDashboard";
 import TestPage from "./pages/student/TestPage";
-import TeacherDashboard from "./pages/teacher/TeacherDashboard";
-import StudentResultsPage from "./pages/student/StudentResultsPage";
-import { CreateTest } from "./pages/teacher/CreateTest";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import TeacherDashboard from "./pages/dashboards/TeacherDashboard";
+import AdminDashboard from "./pages/dashboards/AdminDashboard";
 import TestResults from "./pages/student/TestResults";
-import { AddQuestion } from "./pages/teacher/AddQuestion";
-import { AssignTest } from "./pages/teacher/AssignTestModal";
-import AdminUserListPanel from "./pages/admin/AdminUserListPanel";
+import UserManagement from "./pages/users/UserManagement";
 import "./App.css";
-import StyleGuide from "./pages/StyleGuide";
 import NavBar from "./pages/NavBar";
-import Profile from "./pages/Profile";
-import ClassroomManagement from "./pages/teacher/ClassroomManagement";
-import StudentManagement from "./pages/teacher/StudentManagement";
-import ManageTests from "./pages/teacher/ManageTests";
-import AssignToClassroom from "./pages/teacher/AssignToClassroom";
-import AdminClassroomManagement from "./pages/admin/AdminClassroomManagement";
+import Profile from "./pages/login/Profile";
+import ManageAssignments from "./pages/assignments/ManageAssignments";
+import ClassroomManagement from "./pages/classrooms/ClassroomManagement";
+import Signup from "./pages/login/Signup";
+import MyStudentsPanel from "./pages/student/MyStudentsPanel";
 
 function App() {
   return (
@@ -32,6 +26,7 @@ function App() {
       <NavBar></NavBar>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
 
         <Route
@@ -42,7 +37,7 @@ function App() {
                 <Routes>
                   <Route path="" element={<StudentDashboard />} />
                   <Route path="test/:testId" element={<TestPage />} />
-                  <Route path="results" element={<TestResults />} />
+                  <Route path=":studentId/history" element={<TestResults />} />
                 </Routes>
               </div>
             </RequireAuth>
@@ -55,23 +50,11 @@ function App() {
             <RequireAuth allowedRoles={["teacher", "admin"]}>
               <Routes>
                 <Route path="" element={<TeacherDashboard />} />
-                {/* <Route path="students" element={<TeacherStudentList />} /> */}
+                <Route path="tests" element={<ManageAssignments />} />
+                <Route path="my-students" element={<MyStudentsPanel />} />
                 <Route
-                  path="student/:studentId/results"
-                  element={<StudentResultsPage />}
-                />
-                <Route path="tests" element={<ManageTests />} />
-                <Route path="tests/create" element={<CreateTest />} />
-                <Route
-                  path="tests/:testId/add-question"
-                  element={<AddQuestion />}
-                />
-                <Route path="tests/:testId/assign" element={<AssignTest />} />
-                <Route path="students" element={<StudentManagement />} />
-                <Route path="classrooms" element={<ClassroomManagement />} />
-                <Route
-                  path="tests/:testId/assign-classroom"
-                  element={<AssignToClassroom />}
+                  path="student/:studentId/history"
+                  element={<TestResults />}
                 />
               </Routes>
             </RequireAuth>
@@ -84,19 +67,15 @@ function App() {
             <RequireAuth allowedRoles={["admin"]}>
               <Routes>
                 <Route path="" element={<AdminDashboard />} />
-                <Route path="users" element={<AdminUserListPanel />} />
-                <Route
-                  path="classrooms"
-                  element={<AdminClassroomManagement />}
-                />
-                <Route path="tests" element={<ManageTests />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="classrooms" element={<ClassroomManagement />} />
+                <Route path="tests" element={<ManageAssignments />} />
               </Routes>
             </RequireAuth>
           }
         />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
-        <Route path="style-guide" element={<StyleGuide />} />
       </Routes>
     </Router>
   );
