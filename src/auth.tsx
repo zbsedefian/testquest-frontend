@@ -24,14 +24,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <UserContext.Provider
-      value={{ user, setUser: setAndStoreUser, logout }}
-    >
+    <UserContext.Provider value={{ user, setUser: setAndStoreUser, logout }}>
       {children}
     </UserContext.Provider>
   );
 }
-
 
 export function RequireAuth({
   children,
@@ -41,11 +38,7 @@ export function RequireAuth({
   allowedRoles: string[];
 }) {
   const location = useLocation();
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return null; // or a loading spinner
-  }
+  const { user } = useAuth();
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;

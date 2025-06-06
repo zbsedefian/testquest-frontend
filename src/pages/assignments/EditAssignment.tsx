@@ -1,20 +1,31 @@
-// EditTestPage.tsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../auth-context";
 import { Link, useParams } from "react-router-dom";
 import { AssignClassroomsPanel } from "./AssignClassroomsPanel";
 
+// Define the shape of the test form explicitly
+interface TestForm {
+  name: string;
+  description?: string;
+  is_timed: boolean;
+  duration_minutes?: number;
+  max_attempts: number;
+  available_from?: string;
+  available_until?: string;
+  graded_by: "auto" | "manual";
+}
+
 export default function EditAssignment() {
   const { user } = useAuth();
   const { id } = useParams();
   const testId = Number(id);
-  const [form, setForm] = useState<any>(null);
+  const [form, setForm] = useState<TestForm | null>(null);
   const [status, setStatus] = useState<
     "idle" | "loading" | "saving" | "success" | "error"
   >("idle");
 
-  function toDatetimeLocal(value: string | null) {
+  function toDatetimeLocal(value: string | null | undefined) {
     if (!value) return "";
     const date = new Date(value);
     return date.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:MM"
@@ -36,12 +47,16 @@ export default function EditAssignment() {
     fetchTest();
   }, [testId, user]);
 
-  const updateForm = (field: string, value: any) => {
-    setForm((prev: any) => ({ ...prev, [field]: value }));
+  const updateForm = <K extends keyof TestForm>(
+    field: K,
+    value: TestForm[K]
+  ) => {
+    setForm((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form) return;
     setStatus("saving");
     try {
       await axios.put(`/api/tests/${testId}`, form, {
@@ -125,7 +140,9 @@ export default function EditAssignment() {
         <label className="block font-medium">Graded By:</label>
         <select
           value={form.graded_by || "auto"}
-          onChange={(e) => updateForm("graded_by", e.target.value)}
+          onChange={(e) =>
+            updateForm("graded_by", e.target.value as "auto" | "manual")
+          }
           className="w-full px-3 py-2 rounded border"
         >
           <option value="auto">Auto</option>

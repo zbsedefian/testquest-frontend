@@ -4,6 +4,16 @@ import { useAuth } from "../../auth-context";
 import type { Role, User } from "../../types";
 import { Spinner } from "../../components/Spinner";
 
+export type UserCreate = {
+  username: string;
+  password?: string; // Optional in TS, only used when creating
+  role: "admin" | "teacher" | "student";
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  created_at?: string; // ISO string format in TS
+};
+
 function useFocusTrap(
   ref: React.RefObject<HTMLDivElement | null>,
   active: boolean
@@ -92,7 +102,7 @@ export function UserModal({
     }
     setLoading(true);
     try {
-      const payload: any = {
+      const payload: UserCreate = {
         username,
         role,
         email,

@@ -37,7 +37,6 @@ export default function UserManagement() {
         },
         headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       });
-      console.log(res.data.users);
       setUsers(res.data.users);
       setTotalPages(res.data.total_pages);
     } catch (err) {
