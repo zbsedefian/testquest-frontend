@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { TopStudentsPreview } from "../rankings/TopStudentsPreview";
 
 const AdminDashboard = () => {
   return (
@@ -33,6 +34,7 @@ const AdminDashboard = () => {
             👤 Manage Users
           </Link>
         </li>
+        <TopStudentsPreview />
       </ul>
     </div>
   );

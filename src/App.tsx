@@ -23,7 +23,8 @@ import EditAssignment from "./pages/assignments/EditAssignment";
 import BeginTestPage from "./pages/student/BeginTestPage";
 
 import { useAuth } from "./auth-context";
-import TestRankings from "./pages/rankings/TestRankings";
+import TestRankings from "./pages/assignments/TestRankings";
+import ClassroomRankings from "./pages/classrooms/ClassroomRankings";
 
 function DefaultRedirect() {
   const { user } = useAuth();
@@ -51,6 +52,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/classroom/:classroomId/rankings"
+          element={<ClassroomRankings />}
+        />
 
         <Route
           path="/student/*"
@@ -98,7 +103,10 @@ function App() {
                 <Route path="classrooms" element={<ClassroomManagement />} />
                 <Route path="tests" element={<ManageAssignments />} />
                 <Route path="tests/:id/edit" element={<EditAssignment />} />
-                <Route path="tests/:testId/ranking" element={<TestRankings />} />
+                <Route
+                  path="tests/:testId/ranking"
+                  element={<TestRankings />}
+                />
               </Routes>
             </RequireAuth>
           }

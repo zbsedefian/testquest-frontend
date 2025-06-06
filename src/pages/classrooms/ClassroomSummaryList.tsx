@@ -5,6 +5,7 @@ import { useAuth } from "../../auth-context";
 import StudentListModal from "./StudentListModal";
 import TestListModal from "./TestListModal";
 import UserMultiSelectList from "./UserMultiSelectList";
+import { Link } from "react-router-dom";
 
 type Props = {
   refreshKey: number;
@@ -175,6 +176,14 @@ export default function ClassroomSummaryList({ refreshKey }: Props) {
                 >
                   View assigned tests
                 </button>
+              </p>
+              <p className="mt-2">
+                <Link
+                  to={`/classroom/${cls.id}/rankings`}
+                  className="text-green-700 underline"
+                >
+                  View classroom rankings
+                </Link>
               </p>
             </div>
           )}
