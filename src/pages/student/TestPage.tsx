@@ -87,7 +87,7 @@ export default function TestPage() {
     if (!testId) return;
     const started = localStorage.getItem(`test_started_${testId}`);
     if (!started) navigate(`/student/test/${testId}/begin`);
-  }, []);
+  });
 
   // Start countdown effect
   useEffect(() => {

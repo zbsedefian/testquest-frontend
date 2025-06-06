@@ -35,7 +35,7 @@ export default function BeginTestPage() {
     if (user && testId) {
       fetchData();
     }
-  }, [testId, user?.id, user?.role]);
+  }, [testId, user, user?.id, user?.role]);
 
   if (loading) return <p className="text-center mt-10">Loading test info...</p>;
   if (!test) return <p className="text-center mt-10">Test not found.</p>;
