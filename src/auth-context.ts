@@ -1,9 +1,9 @@
 import { createContext, useContext } from "react";
-import type { User } from "./auth";
+import type { User } from "./types";
 
 export interface AuthContextType {
   user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUser: (user: User | null) => void;
   logout: () => void;
 }
 

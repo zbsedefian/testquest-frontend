@@ -34,14 +34,10 @@ function useFocusTrap(
         }
       } else if (e.key === "Escape") {
         e.preventDefault();
-        // Optionally close modal on Escape, but modal component controls that
       }
     }
     document.addEventListener("keydown", handleKeyDown);
-
-    // Focus first element on mount
     firstElement.focus();
-
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [active, ref]);
 }
@@ -64,6 +60,9 @@ export function UserModal({
   const [username, setUsername] = useState(editingUser?.username || "");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<Role>(editingUser?.role || "student");
+  const [firstName, setFirstName] = useState(editingUser?.first_name || "");
+  const [lastName, setLastName] = useState(editingUser?.last_name || "");
+  const [email, setEmail] = useState(editingUser?.email || "");
   const [loading, setLoading] = useState(false);
 
   useFocusTrap(modalRef, isOpen);
@@ -72,10 +71,16 @@ export function UserModal({
     if (editingUser) {
       setUsername(editingUser.username);
       setRole(editingUser.role);
+      setFirstName(editingUser.first_name || "");
+      setLastName(editingUser.last_name || "");
+      setEmail(editingUser.email || "");
     } else {
       setUsername("");
       setRole("student");
       setPassword("");
+      setFirstName("");
+      setLastName("");
+      setEmail("");
     }
   }, [editingUser, isOpen]);
 
@@ -87,27 +92,24 @@ export function UserModal({
     }
     setLoading(true);
     try {
-      if (editingUser) {
-        // Edit user
-        await axios.put(
-          `/api/admin/user/${editingUser.id}`,
-          { username, role, ...(password ? { password } : {}) },
-          {
-            headers: { "x-user-id": user?.id, "x-user-role": user?.role },
-          }
-        );
-        alert("User updated!");
-      } else {
-        // Create user
-        await axios.post(
-          "/api/admin/user",
-          { username, password, role },
-          {
-            headers: { "x-user-id": user?.id, "x-user-role": user?.role },
-          }
-        );
-        alert("User created!");
-      }
+      const payload: any = {
+        username,
+        role,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+      };
+      if (!editingUser) payload.password = password;
+      else if (password) payload.password = password;
+
+      await axios[editingUser ? "put" : "post"](
+        editingUser ? `/api/admin/user/${editingUser.id}` : "/api/admin/user",
+        payload,
+        {
+          headers: { "x-user-id": user?.id, "x-user-role": user?.role },
+        }
+      );
+      alert(editingUser ? "User updated!" : "User created!");
       onUserSaved();
       onClose();
     } catch (err) {
@@ -223,6 +225,48 @@ export function UserModal({
               <option value="teacher">Teacher</option>
               <option value="admin">Admin</option>
             </select>
+          </div>
+
+          <div>
+            <label htmlFor="firstName" className="block font-medium mb-1">
+              First Name
+            </label>
+            <input
+              id="firstName"
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              disabled={loading}
+              className="w-full border border-gray-300 rounded px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="lastName" className="block font-medium mb-1">
+              Last Name
+            </label>
+            <input
+              id="lastName"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              disabled={loading}
+              className="w-full border border-gray-300 rounded px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block font-medium mb-1">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              className="w-full border border-gray-300 rounded px-3 py-2"
+            />
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t">

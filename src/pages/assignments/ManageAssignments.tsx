@@ -4,18 +4,17 @@ import { useAuth } from "../../auth-context";
 import { CreateAssignment } from "./CreateAssignment";
 import { AssignTestModal } from "./AssignTestModal";
 import { AddQuestionModal } from "./AddQuestionModal";
+import { Link } from "react-router-dom";
 
 export default function ManageAssignments() {
   const [selectedTestId, setSelectedTestId] = useState<number | null>(null);
-  const [mode, setMode] = useState<"list" | "create" | "edit" | "assign">(
-    "list"
-  );
+  const [tab, setTab] = useState<"list" | "create">("list");
+  const [mode, setMode] = useState<"edit" | "assign" | null>(null);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const perPage = 10;
   const [allTests, setAllTests] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
-
   const { user } = useAuth();
 
   const fetchTests = async () => {
@@ -34,10 +33,10 @@ export default function ManageAssignments() {
   };
 
   useEffect(() => {
-    if (mode === "list") {
+    if (tab === "list") {
       fetchTests();
     }
-  }, [mode, user]);
+  }, [tab, user]);
 
   const filteredTests = allTests.filter((test) =>
     test.name.toLowerCase().includes(search.toLowerCase())
@@ -50,7 +49,31 @@ export default function ManageAssignments() {
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Manage Assignments</h1>
 
-      {mode === "list" && (
+      {/* Tabs */}
+      <div className="flex border-b mb-6">
+        <button
+          onClick={() => setTab("list")}
+          className={`px-4 py-2 border-b-2 font-medium ${
+            tab === "list"
+              ? "border-blue-600 text-blue-600"
+              : "border-transparent text-gray-600 hover:text-black"
+          }`}
+        >
+          Assignments List
+        </button>
+        <button
+          onClick={() => setTab("create")}
+          className={`ml-4 px-4 py-2 border-b-2 font-medium ${
+            tab === "create"
+              ? "border-blue-600 text-blue-600"
+              : "border-transparent text-gray-600 hover:text-black"
+          }`}
+        >
+          Create Assignment
+        </button>
+      </div>
+
+      {tab === "list" && (
         <>
           <div className="flex items-center justify-between mb-4">
             <input
@@ -63,12 +86,6 @@ export default function ManageAssignments() {
               placeholder="Search tests..."
               className="border px-3 py-1 rounded w-full max-w-sm"
             />
-            <button
-              className="ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              onClick={() => setMode("create")}
-            >
-              + Create New Assignment
-            </button>
           </div>
 
           {loading ? (
@@ -80,6 +97,12 @@ export default function ManageAssignments() {
                   <div className="flex justify-between items-center mb-2">
                     <strong>{test.name}</strong>
                     <div className="space-x-2">
+                      <Link
+                        to={`/admin/tests/${test.id}/edit`}
+                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded inline-block text-center"
+                      >
+                        Edit Info
+                      </Link>
                       <button
                         onClick={() => {
                           setSelectedTestId(test.id);
@@ -125,25 +148,33 @@ export default function ManageAssignments() {
         </>
       )}
 
-      {mode === "create" && (
+      {tab === "create" && (
         <CreateAssignment
-          onBack={() => setMode("list")}
+          onBack={() => setTab("list")}
           onAssignmentCreated={() => {
             fetchTests();
-            setMode("list");
+            setTab("list");
           }}
         />
       )}
+
       {mode === "edit" && selectedTestId && (
         <AddQuestionModal
           testId={selectedTestId}
-          onClose={() => setMode("list")}
+          onClose={() => {
+            setMode(null);
+            fetchTests();
+          }}
         />
       )}
+
       {mode === "assign" && selectedTestId && (
         <AssignTestModal
           testId={selectedTestId}
-          onClose={() => setMode("list")}
+          onClose={() => {
+            setMode(null);
+            fetchTests();
+          }}
         />
       )}
     </div>

@@ -20,6 +20,7 @@ export default function NavBar() {
 
   const handleLogout = () => {
     logout();
+    localStorage.clear();
     navigate("/login");
   };
 

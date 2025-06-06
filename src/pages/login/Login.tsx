@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth-context";
+import type { User } from "../../types";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,10 +14,13 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("api/auth/login", { username, password });
-      const user = res.data;
-      setUser(res.data);
-      navigate(`/${user.role}`);
+      const res = await axios.post<User>("/api/auth/login", {
+        username,
+        password,
+      });
+      const { username: fetchedUsername, role, id } = res.data;
+      setUser({ username: fetchedUsername, role, id });
+      navigate(`/${role}`);
     } catch (err) {
       alert("Login failed");
       console.error(err);

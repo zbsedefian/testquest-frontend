@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../auth-context";
-import UserMultiSelectList from "../../components/UserMultiSelectList";
+import UserMultiSelectList from "./UserMultiSelectList";
 import type { User, Classroom } from "../../types";
 
 type Props = {
@@ -78,19 +78,27 @@ export default function ClassroomModal({
         });
         alert("Classroom updated!");
       } else {
-        await axios.post("/api/classrooms", {
-          classroom_name: className,
-          teacher_ids: teacherIds,
-          student_ids: studentIds,
-        }, {
-          headers: { "x-user-id": user?.id, "x-user-role": user?.role },
-        });
+        await axios.post(
+          "/api/classrooms",
+          {
+            classroom_name: className,
+            teacher_ids: teacherIds,
+            student_ids: studentIds,
+          },
+          {
+            headers: { "x-user-id": user?.id, "x-user-role": user?.role },
+          }
+        );
         alert("Classroom created!");
       }
 
       onSaved();
     } catch (err) {
-      alert(isEditMode ? "Failed to update classroom." : "Failed to create classroom.");
+      alert(
+        isEditMode
+          ? "Failed to update classroom."
+          : "Failed to create classroom."
+      );
       console.error(err);
     } finally {
       setSaving(false);

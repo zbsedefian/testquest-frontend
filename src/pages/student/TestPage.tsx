@@ -4,6 +4,8 @@ import axios from "axios";
 import "katex/dist/katex.min.css";
 import { InlineMath } from "react-katex";
 import { useAuth } from "../../auth-context";
+import type { Test } from "../../types";
+import { TimerRing } from "../../components/TimerRing";
 
 export interface Question {
   id: number;
@@ -54,6 +56,56 @@ export default function TestPage() {
   const [loading, setLoading] = useState(true);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [showReviewScreen, setShowReviewScreen] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const timerKey = `test_timer_${testId}`;
+  const [duration, setDuration] = useState<number | null>(null);
+
+  const setTimer = (test: Test) => {
+    if (test.is_timed && test.duration_minutes) {
+      const stored = localStorage.getItem(timerKey);
+
+      if (stored) {
+        const storedEnd = parseInt(stored);
+        const now = Date.now();
+        const secondsLeft = Math.floor((storedEnd - now) / 1000);
+
+        if (secondsLeft <= 0) {
+          submitTest(); // already expired
+        } else {
+          setTimeLeft(secondsLeft);
+        }
+      } else {
+        const endTime = Date.now() + test.duration_minutes * 60 * 1000;
+        localStorage.setItem(timerKey, endTime.toString());
+        setTimeLeft(test.duration_minutes * 60);
+      }
+    }
+  };
+
+  // Disallow navigation unless "test started" has been clicked.
+  useEffect(() => {
+    if (!testId) return;
+    const started = localStorage.getItem(`test_started_${testId}`);
+    if (!started) navigate(`/student/test/${testId}/begin`);
+  }, []);
+
+  // Start countdown effect
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          submitTest(); // Auto-submit when time runs out
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft]);
 
   useEffect(() => {
     axios
@@ -61,6 +113,9 @@ export default function TestPage() {
         headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       })
       .then((res) => {
+        setTestName(res.data.name);
+        setTimer(res.data as Test);
+        setDuration(res.data.duration_minutes || null);
         // Assume res.data has shape { name: string, questions: [...] }
         const questionsWithParsedChoices: Question[] = res.data.map(
           (q: RawQuestion) => ({
@@ -68,7 +123,6 @@ export default function TestPage() {
             choices: JSON.parse(q.choices),
           })
         );
-        setTestName(res.data.name);
         setQuestions(questionsWithParsedChoices);
         setLoading(false);
       });
@@ -127,6 +181,8 @@ export default function TestPage() {
 
   const submitTest = () => {
     setShowSubmitModal(false);
+    localStorage.removeItem(timerKey);
+    localStorage.removeItem(`test_started_${testId}`);
     axios
       .post(
         "/api/student/submit",
@@ -159,6 +215,9 @@ export default function TestPage() {
     return (
       <div className="max-w-3xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-4 text-center">{testName}</h1>
+        {timeLeft > 0 && duration && (
+          <TimerRing timeLeft={timeLeft} duration={duration} />
+        )}
 
         <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
           <div
@@ -319,6 +378,15 @@ export default function TestPage() {
               } hover:opacity-80`}
             >
               <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold mb-4 text-center">
+                  {testName}
+                </h1>
+                {timeLeft > 0 && (
+                  <div className="text-center text-red-600 font-bold mb-4 text-lg">
+                    Time Left: {Math.floor(timeLeft / 60)}:
+                    {String(timeLeft % 60).padStart(2, "0")}
+                  </div>
+                )}
                 <div>
                   <span className="font-semibold">Question {i + 1}:</span>{" "}
                   {parseRichText(q.question_text)}

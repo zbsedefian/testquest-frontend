@@ -15,6 +15,12 @@ const colors = [
   "#9c27b0", // purple
   "#f44336", // red
   "#00bcd4", // cyan
+  "#3f51b5", // indigo
+  "#e91e63", // pink
+  "#795548", // brown
+  "#8bc34a", // light green
+  "#ffc107", // amber
+  "#607d8b", // blue grey
 ];
 
 const StudentDashboard = () => {
@@ -63,7 +69,7 @@ const StudentDashboard = () => {
         {tests.map((test, idx) => (
           <Link
             key={test.id}
-            to={`/student/test/${test.id}`}
+            to={`/student/test/${test.id}/begin`}
             style={{
               display: "flex",
               alignItems: "center",

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "../../auth-context";
-import type { RelatedUsers, User, PaginatedResponse } from "../../types";
+import type { User, PaginatedResponse } from "../../types";
 import { Spinner } from "../../components/Spinner";
 import { UserModal } from "./UserModal";
 
@@ -21,12 +21,11 @@ export default function UserManagement() {
 
   // For expanded user details showing teacher/students
   const [expandedUserId, setExpandedUserId] = useState<number | null>(null);
-  const [relatedUsers, setRelatedUsers] = useState<RelatedUsers | null>(null);
-  const [loadingRelated, setLoadingRelated] = useState(false);
+  // const [relatedUsers, setRelatedUsers] = useState<RelatedUsers | null>(null);
+  //const [loadingRelated, setLoadingRelated] = useState(false);
 
   // Fetch users
   const fetchUsers = useCallback(async () => {
-    console.log("Fetching users page:", page);
     setLoadingUsers(true);
     try {
       const res = await axios.get<PaginatedResponse>("/api/admin/users", {
@@ -38,6 +37,7 @@ export default function UserManagement() {
         },
         headers: { "x-user-id": user?.id, "x-user-role": user?.role },
       });
+      console.log(res.data.users);
       setUsers(res.data.users);
       setTotalPages(res.data.total_pages);
     } catch (err) {
@@ -51,39 +51,39 @@ export default function UserManagement() {
   useEffect(() => {
     fetchUsers();
     setExpandedUserId(null);
-    setRelatedUsers(null);
+    // setRelatedUsers(null);
   }, [fetchUsers]);
 
   // Fetch related users for expanded row
-  async function fetchRelatedUsers(userId: number) {
-    setLoadingRelated(true);
-    setRelatedUsers(null);
-    try {
-      const res = await axios.get<RelatedUsers>(
-        `/api/admin/users/${userId}/related`,
-        {
-          headers: { "x-user-id": user?.id, "x-user-role": user?.role },
-        }
-      );
-      setRelatedUsers(res.data);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to load related users.");
-    } finally {
-      setLoadingRelated(false);
-    }
-  }
+  // async function fetchRelatedUsers(userId: number) {
+  //   setLoadingRelated(true);
+  //   setRelatedUsers(null);
+  //   try {
+  //     const res = await axios.get<RelatedUsers>(
+  //       `/api/admin/users/${userId}/related`,
+  //       {
+  //         headers: { "x-user-id": user?.id, "x-user-role": user?.role },
+  //       }
+  //     );
+  //     setRelatedUsers(res.data);
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Failed to load related users.");
+  //   } finally {
+  //     setLoadingRelated(false);
+  //   }
+  // }
 
   // Toggle expanded user detail
-  function toggleExpand(user: User) {
-    if (expandedUserId === user.id) {
-      setExpandedUserId(null);
-      setRelatedUsers(null);
-    } else {
-      setExpandedUserId(user.id);
-      fetchRelatedUsers(user.id);
-    }
-  }
+  // function toggleExpand(user: User) {
+  //   if (expandedUserId === user.id) {
+  //     setExpandedUserId(null);
+  //     setRelatedUsers(null);
+  //   } else {
+  //     setExpandedUserId(user.id);
+  //     fetchRelatedUsers(user.id);
+  //   }
+  // }
 
   async function handleDelete(userId: number) {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
@@ -96,7 +96,7 @@ export default function UserManagement() {
       // Refresh list and close expanded if deleted user was expanded
       if (expandedUserId === userId) {
         setExpandedUserId(null);
-        setRelatedUsers(null);
+        // setRelatedUsers(null);
       }
       fetchUsers();
     } catch (err) {
@@ -189,7 +189,7 @@ export default function UserManagement() {
                 users.map((u, i) => (
                   <React.Fragment key={u.id}>
                     <tr
-                      onClick={() => toggleExpand(u)}
+                      // TODO -- onClick={() => toggleExpand(u)}
                       className={`cursor-pointer ${
                         i % 2 === 0 ? "bg-white" : "bg-gray-50"
                       } hover:bg-blue-50`}
@@ -219,7 +219,7 @@ export default function UserManagement() {
                       </td>
                     </tr>
 
-                    {/* Expanded related users row */}
+                    {/* Expanded related users row
                     {expandedUserId === u.id && (
                       <tr className="bg-gray-100">
                         <td colSpan={4} className="p-4">
@@ -270,7 +270,7 @@ export default function UserManagement() {
                           )}
                         </td>
                       </tr>
-                    )}
+                    )} */}
                   </React.Fragment>
                 ))
               )}

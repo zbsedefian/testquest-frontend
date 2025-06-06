@@ -27,7 +27,7 @@ export function AddQuestionModal({ testId, onClose }: Props) {
 
     try {
       await axios.post(
-        `/api/teacher/tests/${testId}/questions`,
+        `/api/tests/${testId}/questions`,
         {
           question_text: questionText,
           choices: JSON.stringify(choices),

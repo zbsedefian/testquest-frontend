@@ -1,9 +1,5 @@
 import { useState } from "react";
-
-type User = {
-  id: number;
-  username: string;
-};
+import type { User } from "../../types";
 
 type Props = {
   label: string;

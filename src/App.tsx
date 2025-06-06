@@ -19,12 +19,34 @@ import ManageAssignments from "./pages/assignments/ManageAssignments";
 import ClassroomManagement from "./pages/classrooms/ClassroomManagement";
 import Signup from "./pages/login/Signup";
 import MyStudentsPanel from "./pages/student/MyStudentsPanel";
+import EditAssignment from "./pages/assignments/EditAssignment";
+import BeginTestPage from "./pages/student/BeginTestPage";
+
+import { useAuth } from "./auth-context";
+
+function DefaultRedirect() {
+  const { user } = useAuth();
+
+  if (!user) return <Navigate to="/login" replace />;
+
+  switch (user.role) {
+    case "admin":
+      return <Navigate to="/admin" replace />;
+    case "teacher":
+      return <Navigate to="/teacher" replace />;
+    case "student":
+      return <Navigate to="/student" replace />;
+    default:
+      return <Navigate to="/login" replace />;
+  }
+}
 
 function App() {
   return (
     <Router>
       <NavBar></NavBar>
       <Routes>
+        <Route path="*" element={<DefaultRedirect />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
@@ -38,6 +60,10 @@ function App() {
                   <Route path="" element={<StudentDashboard />} />
                   <Route path="test/:testId" element={<TestPage />} />
                   <Route path=":studentId/history" element={<TestResults />} />
+                  <Route
+                    path="test/:testId/begin"
+                    element={<BeginTestPage />}
+                  />
                 </Routes>
               </div>
             </RequireAuth>
@@ -70,12 +96,11 @@ function App() {
                 <Route path="users" element={<UserManagement />} />
                 <Route path="classrooms" element={<ClassroomManagement />} />
                 <Route path="tests" element={<ManageAssignments />} />
+                <Route path="tests/:id/edit" element={<EditAssignment />} />
               </Routes>
             </RequireAuth>
           }
         />
-
-        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

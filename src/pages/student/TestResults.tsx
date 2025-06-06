@@ -55,7 +55,8 @@ export default function TestResults() {
   }, [user, studentId, classroomId]);
 
   if (!user) return <p className="text-center text-gray-500">Please log in.</p>;
-  if (loading) return <p className="text-center text-gray-500">Loading results...</p>;
+  if (loading)
+    return <p className="text-center text-gray-500">Loading results...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
   if (results.length === 0)
     return <p className="text-center text-gray-500">No test results found.</p>;
@@ -89,7 +90,7 @@ export default function TestResults() {
                   className="flex justify-between items-center bg-slate-50 px-4 py-2 rounded-md border"
                 >
                   <span className="text-slate-700 font-medium">
-                    Score: {r.score}
+                    Score: {r.score}%
                   </span>
                   {r.completed_at && (
                     <span className="text-sm text-slate-500">

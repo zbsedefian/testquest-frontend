@@ -4,7 +4,7 @@ import type { Classroom, User } from "../../types";
 import { useAuth } from "../../auth-context";
 import StudentListModal from "./StudentListModal";
 import TestListModal from "./TestListModal";
-import UserMultiSelectList from "../../components/UserMultiSelectList";
+import UserMultiSelectList from "./UserMultiSelectList";
 
 type Props = {
   refreshKey: number;
