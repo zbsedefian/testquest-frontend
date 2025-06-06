@@ -68,7 +68,7 @@ export default function BeginTestPage() {
             <strong>Passing Score:</strong> {test.pass_score}%
           </li>
         )}
-        <li>
+        {/* <li>
           <strong>Grading:</strong>{" "}
           {test.graded_by === "manual" ? "Manual" : "Auto"}
         </li>
@@ -81,7 +81,7 @@ export default function BeginTestPage() {
           {test.show_results_immediately
             ? "Shown immediately"
             : "Delayed or Manual"}
-        </li>
+        </li> */}
       </ul>
 
       <div className="text-center">

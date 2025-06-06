@@ -98,12 +98,6 @@ export default function ManageAssignments() {
                     <strong>{test.name}</strong>
                     <div className="space-x-2">
                       <Link
-                        to={`/admin/tests/${test.id}/ranking`}
-                        className="px-3 py-1 text-sm bg-purple-600 text-white rounded inline-block text-center"
-                      >
-                        Rankings
-                      </Link>
-                      <Link
                         to={`/admin/tests/${test.id}/edit`}
                         className="px-3 py-1 text-sm bg-blue-600 text-white rounded inline-block text-center"
                       >
@@ -127,6 +121,12 @@ export default function ManageAssignments() {
                       >
                         Assigned Classes
                       </button>
+                      <Link
+                        to={`/admin/tests/${test.id}/ranking`}
+                        className="px-3 py-1 text-sm bg-purple-600 text-white rounded inline-block text-center"
+                      >
+                        Rankings
+                      </Link>
                     </div>
                   </div>
                 </li>

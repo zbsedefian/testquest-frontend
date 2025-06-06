@@ -18,9 +18,15 @@ export const TimerRing = ({
   const progress = timeLeft / (duration * 60);
   const strokeDashoffset = circumference * (1 - progress);
 
+  const isDanger = timeLeft <= 60;
+
   return (
     <div className="flex flex-col items-center mb-4">
-      <svg height={radius * 2} width={radius * 2}>
+      <svg
+        height={radius * 2}
+        width={radius * 2}
+        className="transform -rotate-90"
+      >
         <circle
           stroke="#e5e7eb"
           fill="transparent"
@@ -30,7 +36,7 @@ export const TimerRing = ({
           cy={radius}
         />
         <circle
-          stroke="#ef4444"
+          stroke={isDanger ? "#ef4444" : "#3b82f6"} // red or blue
           fill="transparent"
           strokeWidth={stroke}
           strokeLinecap="round"
@@ -41,7 +47,11 @@ export const TimerRing = ({
           cy={radius}
         />
       </svg>
-      <div className="text-sm text-center text-red-600 font-semibold mt-2">
+      <div
+        className={`text-sm text-center font-semibold mt-2 ${
+          isDanger ? "text-red-600" : "text-blue-600"
+        }`}
+      >
         {formatTime(timeLeft)} left
       </div>
     </div>

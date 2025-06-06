@@ -4,7 +4,6 @@ import axios from "axios";
 import "katex/dist/katex.min.css";
 import { InlineMath } from "react-katex";
 import { useAuth } from "../../auth-context";
-import type { Test } from "../../types";
 import { TimerRing } from "../../components/TimerRing";
 
 export interface Question {
@@ -32,7 +31,16 @@ type Answer = {
   selected_choice: string;
 };
 
+export interface TestWithQuestions {
+  id: number;
+  name: string;
+  duration_minutes: number | null;
+  is_timed: boolean;
+  questions: Question[];
+}
+
 function parseRichText(text: string) {
+  console.log(text);
   const parts = text.split(/(\$[^$]+\$)/g);
   return parts.map((part, index) =>
     part.startsWith("$") && part.endsWith("$") ? (
@@ -59,8 +67,10 @@ export default function TestPage() {
   const [timeLeft, setTimeLeft] = useState(0);
   const timerKey = `test_timer_${testId}`;
   const [duration, setDuration] = useState<number | null>(null);
+  const [showTimer, setShowTimer] = useState(true);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  const setTimer = (test: Test) => {
+  const setTimer = (test: TestWithQuestions) => {
     if (test.is_timed && test.duration_minutes) {
       const stored = localStorage.getItem(timerKey);
 
@@ -114,10 +124,10 @@ export default function TestPage() {
       })
       .then((res) => {
         setTestName(res.data.name);
-        setTimer(res.data as Test);
+        setTimer(res.data as TestWithQuestions);
         setDuration(res.data.duration_minutes || null);
         // Assume res.data has shape { name: string, questions: [...] }
-        const questionsWithParsedChoices: Question[] = res.data.map(
+        const questionsWithParsedChoices: Question[] = res.data.questions.map(
           (q: RawQuestion) => ({
             ...q,
             choices: JSON.parse(q.choices),
@@ -180,9 +190,10 @@ export default function TestPage() {
   };
 
   const submitTest = () => {
-    setShowSubmitModal(false);
+    if (hasSubmitted) return;
+    setHasSubmitted(true);
     localStorage.removeItem(timerKey);
-    localStorage.removeItem(`test_started_${testId}`);
+    setShowSubmitModal(false);
     axios
       .post(
         "/api/student/submit",
@@ -215,8 +226,26 @@ export default function TestPage() {
     return (
       <div className="max-w-3xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-4 text-center">{testName}</h1>
-        {timeLeft > 0 && duration && (
-          <TimerRing timeLeft={timeLeft} duration={duration} />
+
+        {timeLeft > 0 && duration && showTimer && (
+          <div className="fixed top-20 right-20 z-50 flex items-center gap-2 bg-white p-2 rounded shadow-lg">
+            <TimerRing timeLeft={timeLeft} duration={duration} />
+            <button
+              onClick={() => setShowTimer(false)}
+              className="text-sm text-gray-500 hover:text-gray-800"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        {timeLeft > 0 && duration && !showTimer && (
+          <button
+            onClick={() => setShowTimer(true)}
+            className="fixed top-20 right-20 z-50 bg-blue-600 text-white px-3 py-1 rounded shadow"
+          >
+            Show Timer
+          </button>
         )}
 
         <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
@@ -378,15 +407,6 @@ export default function TestPage() {
               } hover:opacity-80`}
             >
               <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold mb-4 text-center">
-                  {testName}
-                </h1>
-                {timeLeft > 0 && (
-                  <div className="text-center text-red-600 font-bold mb-4 text-lg">
-                    Time Left: {Math.floor(timeLeft / 60)}:
-                    {String(timeLeft % 60).padStart(2, "0")}
-                  </div>
-                )}
                 <div>
                   <span className="font-semibold">Question {i + 1}:</span>{" "}
                   {parseRichText(q.question_text)}

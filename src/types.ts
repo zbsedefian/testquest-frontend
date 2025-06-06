@@ -33,12 +33,6 @@ export type Classroom = {
   total_students: number;
 };
 
-export interface Test {
-  id: number;
-  name: string;
-  created_by: number;
-}
-
 export type ClassroomWithUsers = {
   classroom: Classroom;
   teachers: User[];
@@ -71,4 +65,33 @@ export interface Test {
   pass_score?: number;
   graded_by: "auto" | "manual";
   created_at: string; // ISO datetime string
+}
+
+export interface Question {
+  id: number;
+  test_id: number;
+  order: number;
+  question_text: string;
+  choices: Record<string, string>; // parsed JSON object like { A: "Option A", B: "Option B", ... }
+  correct_choice: string;
+  explanation: string;
+  requires_manual_grading: boolean;
+}
+
+export interface RawQuestion {
+  id: number;
+  test_id: number;
+  order: number;
+  question_text: string;
+  choices: string; // raw JSON string
+  correct_choice: string;
+  explanation: string;
+}
+
+export interface TestWithQuestions {
+  id: number;
+  name: string;
+  duration_minutes: number | null;
+  is_timed: boolean;
+  questions: Question[];
 }
