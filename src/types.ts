@@ -76,6 +76,7 @@ export interface Question {
   correct_choice: string;
   explanation: string;
   requires_manual_grading: boolean;
+  image_url: string;
 }
 
 export interface RawQuestion {

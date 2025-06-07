@@ -25,10 +25,8 @@ export default function EditAssignment() {
     "idle" | "loading" | "saving" | "success" | "error"
   >("idle");
 
-  function toDatetimeLocal(value: string | null | undefined) {
-    if (!value) return "";
-    const date = new Date(value);
-    return date.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:MM"
+  function toUTCString(local: string | undefined): string | undefined {
+    return local ? new Date(local).toISOString() : undefined;
   }
 
   useEffect(() => {
@@ -59,9 +57,17 @@ export default function EditAssignment() {
     if (!form) return;
     setStatus("saving");
     try {
-      await axios.put(`/api/tests/${testId}`, form, {
-        headers: { "x-user-id": user?.id, "x-user-role": user?.role },
-      });
+      await axios.put(
+        `/api/tests/${testId}`,
+        {
+          ...form,
+          available_from: toUTCString(form.available_from),
+          available_until: toUTCString(form.available_until),
+        },
+        {
+          headers: { "x-user-id": user?.id, "x-user-role": user?.role },
+        }
+      );
       setStatus("success");
     } catch {
       setStatus("error");
@@ -94,48 +100,66 @@ export default function EditAssignment() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <label className="flex items-center space-x-2">
+        <div>
+          <div className="flex items-center mb-2 space-x-2">
             <input
               type="checkbox"
               checked={form.is_timed}
               onChange={(e) => updateForm("is_timed", e.target.checked)}
             />
-            <span>Timed</span>
-          </label>
+            <label>Timed Test (minutes)</label>
+          </div>
           <input
             type="number"
-            disabled={!form.is_timed}
             value={form.duration_minutes || ""}
             onChange={(e) =>
-              updateForm("duration_minutes", Number(e.target.value))
+              updateForm(
+                "duration_minutes",
+                Math.max(1, Number(e.target.value))
+              )
             }
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Duration (min)"
+            disabled={!form.is_timed}
+            placeholder="Duration in minutes"
+            className={`w-full px-3 py-2 rounded border ${
+              !form.is_timed
+                ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                : ""
+            }`}
           />
         </div>
 
-        <input
-          type="number"
-          value={form.max_attempts || 1}
-          onChange={(e) => updateForm("max_attempts", Number(e.target.value))}
-          className="w-full border px-3 py-2 rounded"
-          placeholder="Max Attempts"
-        />
+        <div>
+          <label className="block font-medium">Maximum Attempts:</label>
+          <input
+            type="number"
+            min={1}
+            value={form.max_attempts}
+            onChange={(e) =>
+              updateForm("max_attempts", Math.max(1, Number(e.target.value)))
+            }
+            className="w-full px-3 py-2 rounded border"
+          />
+        </div>
 
-        <input
-          type="datetime-local"
-          value={toDatetimeLocal(form.available_from)}
-          onChange={(e) => updateForm("available_from", e.target.value)}
-          className="w-full border px-3 py-2 rounded"
-        />
+        <div>
+          <label className="block font-medium">Available From:</label>
+          <input
+            type="datetime-local"
+            value={form.available_from || ""}
+            onChange={(e) => updateForm("available_from", e.target.value)}
+            className="w-full px-3 py-2 rounded border"
+          />
+        </div>
 
-        <input
-          type="datetime-local"
-          value={toDatetimeLocal(form.available_until)}
-          onChange={(e) => updateForm("available_until", e.target.value)}
-          className="w-full border px-3 py-2 rounded"
-        />
+        <div>
+          <label className="block font-medium">Available Until:</label>
+          <input
+            type="datetime-local"
+            value={form.available_until || ""}
+            onChange={(e) => updateForm("available_until", e.target.value)}
+            className="w-full px-3 py-2 rounded border"
+          />
+        </div>
 
         <label className="block font-medium">Graded By:</label>
         <select

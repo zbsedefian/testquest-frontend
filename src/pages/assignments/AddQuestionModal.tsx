@@ -13,6 +13,7 @@ export function AddQuestionModal({ testId, onClose }: Props) {
   const [choices, setChoices] = useState({ A: "", B: "", C: "", D: "" });
   const [correctChoice, setCorrectChoice] = useState("A");
   const [explanation, setExplanation] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -34,6 +35,7 @@ export function AddQuestionModal({ testId, onClose }: Props) {
           correct_choice: correctChoice,
           explanation,
           order: 1,
+          image_url: imageUrl,
         },
         {
           headers: {
@@ -53,6 +55,15 @@ export function AddQuestionModal({ testId, onClose }: Props) {
     }
   };
 
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files?.[0]) {
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+      const res = await axios.post("/api/upload-question-image", formData);
+      setImageUrl(res.data.url); // use this when posting the full question
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center">
       <div className="bg-white w-full max-w-2xl p-6 rounded-lg shadow-lg">
@@ -67,6 +78,11 @@ export function AddQuestionModal({ testId, onClose }: Props) {
               className="w-full border px-3 py-2 rounded"
               rows={3}
             />
+          </div>
+
+          <div>
+            <label className="block font-semibold mb-1">Related Image</label>
+            <input type="file" onChange={handleImageUpload} />
           </div>
 
           {["A", "B", "C", "D"].map((letter) => (

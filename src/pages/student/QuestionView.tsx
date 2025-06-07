@@ -1,11 +1,6 @@
 import type { JSX } from "react";
 import { InlineMath } from "react-katex";
-
-interface Question {
-  id: number;
-  question_text: string;
-  choices: Record<string, string>;
-}
+import type { Question } from "../../types";
 
 interface QuestionViewProps {
   question: Question;
@@ -32,14 +27,34 @@ export function QuestionView({
   goToPrev,
   openReview,
 }: QuestionViewProps): JSX.Element {
-  function parseRichText(text: string) {
-    console.log(text);
-    const parts = text.split(/(\$[^$]+\$)/g);
-    return parts.map((part, index) =>
-      part.startsWith("$") && part.endsWith("$") ? (
-        <InlineMath key={index} math={part.slice(1, -1)} />
-      ) : (
-        <span key={index}>{part}</span>
+  function parseRichText(text: string): JSX.Element[] {
+    const parts = text.split(/(\$.*?\$)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith("$") && part.endsWith("$")) {
+        return <InlineMath key={`math-${index}`} math={part.slice(1, -1)} />;
+      } else {
+        return (
+          <span key={`text-${index}`} suppressHydrationWarning>
+            {part}
+          </span>
+        );
+      }
+    });
+  }
+
+  function renderImage(currentQuestion: Question) {
+    const fileName = currentQuestion.image_url?.split("/").pop() || "";
+    const imageUrl = `http://localhost:8000/uploaded_images/${encodeURIComponent(
+      fileName
+    )}`;
+
+    return (
+      currentQuestion.image_url && (
+        <img
+          src={imageUrl}
+          alt="Question Illustration"
+          className="mb-4 max-w-full"
+        />
       )
     );
   }
@@ -56,6 +71,8 @@ export function QuestionView({
       <div className="mb-2 text-lg font-medium">
         Question {currentIndex + 1} of {totalQuestions}
       </div>
+
+      {renderImage(question)}
 
       <div className="mb-4 text-gray-800 text-lg leading-relaxed">
         {parseRichText(question.question_text)}

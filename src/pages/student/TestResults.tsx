@@ -94,7 +94,7 @@ export default function TestResults() {
                   </span>
                   {r.completed_at && (
                     <span className="text-sm text-slate-500">
-                      {new Date(r.completed_at).toLocaleString()}
+                      {new Date(r.completed_at + "Z").toLocaleString()}
                     </span>
                   )}
                 </li>
