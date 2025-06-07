@@ -38,6 +38,11 @@ export default function NavBar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Close dropdown when user logs in or out
+  useEffect(() => {
+    setDropdownOpen(false);
+  }, [user]);
+
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 px-4 py-3 flex items-center justify-between">
       <Link to={rolePath} className="text-xl font-bold text-blue-600">
