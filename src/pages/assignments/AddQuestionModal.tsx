@@ -82,7 +82,19 @@ export function AddQuestionModal({ testId, onClose }: Props) {
 
           <div>
             <label className="block font-semibold mb-1">Related Image</label>
-            <input type="file" onChange={handleImageUpload} />
+            <label className="block">
+              <span className="sr-only">Upload image</span>
+              <input
+                type="file"
+                onChange={handleImageUpload}
+                className="block w-full text-sm text-gray-500
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-full file:border-0
+               file:text-sm file:font-semibold
+               file:bg-blue-50 file:text-blue-700
+               hover:file:bg-blue-100"
+              />
+            </label>
           </div>
 
           {["A", "B", "C", "D"].map((letter) => (
